@@ -18,6 +18,6 @@ public class SubmitButton : MonoBehaviour
 
     private void OnMouseDown()
     {
-        EventManager.Instance.OnSubmitClicked();
+
     }
 }

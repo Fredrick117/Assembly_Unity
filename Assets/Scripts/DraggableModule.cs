@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class DraggableModule : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class DraggableModule : MonoBehaviour
     private Transform[] ConnectorsArray;
 
     private Vector3 InitialPickupPosition;
+
+    private bool isOver;
 
     private void Start()
     {
@@ -27,8 +31,16 @@ public class DraggableModule : MonoBehaviour
         }
     }
 
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(1))
+            Destroy(gameObject);
+    }
+
     private void OnMouseDown()
     {
+
+
         Offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         IsDragging = true;
         InitialPickupPosition = transform.position;
