@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class DraggableModule : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class DraggableModule : MonoBehaviour
 
     private Transform[] ConnectorsArray;
 
-    private Vector3 InitialPickupPosition;
+    private Vector2 grabPosition;
+
+    private Rigidbody2D rb;
 
     private bool isOver;
 
@@ -20,6 +23,8 @@ public class DraggableModule : MonoBehaviour
     {
         ConnectorsArray = gameObject.transform.GetComponentsInChildren<Transform>();
         ConnectorsArray = ConnectorsArray.Where(child => child.tag == "Connector").ToArray();
+
+        rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -27,23 +32,45 @@ public class DraggableModule : MonoBehaviour
     {
         if (IsDragging)
         {
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Offset;
+            // Set velocity to last direction
+            Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position;
+
+            rb.velocity = direction * 2f;
         }
     }
 
     private void OnMouseOver()
     {
         if (Input.GetMouseButtonDown(1))
-            Destroy(gameObject);
+        {
+            rb.angularVelocity = 0f;
+            rb.velocity = Vector2.zero;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            print("e");
+            rb.angularVelocity = -50f;
+        }
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            print("q");
+            rb.angularVelocity = 50f;
+        }
+        else if (Input.GetKeyUp(KeyCode.E) && Input.GetKeyUp(KeyCode.Q))
+        {
+            rb.angularVelocity = 0f;
+            print("both keys up");
+        }
     }
 
     private void OnMouseDown()
     {
-
+        rb.velocity = Vector2.zero;
 
         Offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         IsDragging = true;
-        InitialPickupPosition = transform.position;
+        grabPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         for (int i = 0; i < ConnectorsArray.Length; i++)
         {
@@ -60,6 +87,15 @@ public class DraggableModule : MonoBehaviour
 
     private void OnMouseUp()
     {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float distance = Vector2.Distance(gameObject.transform.position, mousePosition);
+        if (distance < 0.1f)    // ?
+        {
+            print(distance);
+            rb.velocity = Vector2.zero;
+            //rb.angularVelocity = 0f;
+        }
+
         IsDragging = false;
         float ClosestConnectorDistance = 99999.0f;
         GameObject ClosestOtherConnector = null;
