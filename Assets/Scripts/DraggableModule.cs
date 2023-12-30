@@ -30,6 +30,17 @@ public class DraggableModule : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            rb.angularVelocity = 0f;
+            print("E up!");
+        }
+        else if (Input.GetKeyUp(KeyCode.Q))
+        {
+            rb.angularVelocity = 0f;
+            print("Q up!");
+        }
+
         if (IsDragging)
         {
             // Set velocity to last direction
@@ -41,12 +52,6 @@ public class DraggableModule : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            rb.angularVelocity = 0f;
-            rb.velocity = Vector2.zero;
-        }
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             print("e");
@@ -57,16 +62,12 @@ public class DraggableModule : MonoBehaviour
             print("q");
             rb.angularVelocity = 50f;
         }
-        else if (Input.GetKeyUp(KeyCode.E) && Input.GetKeyUp(KeyCode.Q))
-        {
-            rb.angularVelocity = 0f;
-            print("both keys up");
-        }
     }
 
     private void OnMouseDown()
     {
         rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
 
         Offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         IsDragging = true;
