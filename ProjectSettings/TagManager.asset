@@ -50,3 +50,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ship Modules
+    uniqueID: 3512311327
+    locked: 0
+  - name: Connectors
+    uniqueID: 1058690411
+    locked: 0

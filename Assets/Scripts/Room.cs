@@ -14,12 +14,12 @@ public class Room : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "LifeSup" || other.tag == "Reactor" || other.tag == "ShieldGen")
-        {
-            IsOccupied = true;
-            ReactorSubsystem Data = (ReactorSubsystem)other.gameObject.GetComponent<DraggableComponent>().SubsystemData;
-            InstalledSubsystems.Add(other.gameObject);
-        }
+        // if (other.tag == "LifeSup" || other.tag == "Reactor" || other.tag == "ShieldGen")
+        // {
+        //     IsOccupied = true;
+        //     ReactorSubsystem Data = (ReactorSubsystem)other.gameObject.GetComponent<DraggableComponent>().SubsystemData;
+        //     InstalledSubsystems.Add(other.gameObject);
+        // }
     }
 
     private void OnTriggerExit2D(Collider2D other)
