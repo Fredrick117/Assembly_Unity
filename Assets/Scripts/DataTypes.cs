@@ -1,55 +1,45 @@
-using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
-[System.Serializable]
-public enum ShipSubsystemType
+public enum SubsystemType
 {
-    // THRUSTER,
     REACTOR,
-    // MEDBAY,
-    // NAVIGATION,
-    // WEAPON,
     LIFE_SUPPORT,
-    // REPAIR,
-    SHIELDS,
-    // HANGAR
+    SHIELD_GENERATOR,
+    NAVIGATION,
+    AI,
+    WARP_DRIVE,
 }
 
-[System.Serializable]
-public class ShipSubsystem
-{
-    public string Name;
-    public ShipSubsystemType Type;
+public enum ShipClass
+{ 
+    Hammerhead,
+    Sword,
+    Titan,
 }
 
-[System.Serializable]
-public class ReactorSubsystemData : ShipSubsystem
+public enum ReactorClass
 {
-    // Maximum power
-    public float Power;
-
-    // Maximum number of engines this reactor can fully power
-    public int MaxEngines;
-
-    public ReactorSubsystemData(string _name, ShipSubsystemType _type, float _power, int _maxEngines)
-    {
-        Name = _name;
-        Type = _type;
-        Power = _power;
-        MaxEngines = _maxEngines;
-    }
+    Apollo,
+    Zeus,
 }
 
-[System.Serializable]
-public struct ShipRequest
+[CreateAssetMenu(fileName = "New Subsystem", menuName = "Ship Parts/Subsystem")]
+public class Subsystem : ScriptableObject
 {
-    public List<ShipSubsystemType> RequiredSubsystems;
-    public float? RequiredPower;
+    public string subsystemName;
+    public string subsystemDescription;
+    public SubsystemType subsystemType;
+}
 
-    public ShipRequest(List<ShipSubsystemType> _requiredSubsystems, float? _requiredPower)
-    {
-        RequiredSubsystems = _requiredSubsystems;
-        RequiredPower = _requiredPower;
-    }
+public class ShipRequest
+{
+    public ShipClass? shipClass { get; set; }
+    public int? maxWeapons {get; set;}
+    public int? minWeapon {get; set;}
+    public int budget {get; set;}
+    public float minSpeed {get; set;}
+    public float maxSpeed {get; set;}
+    public List<Subsystem> requiredSubsystems {get; set;}
 }

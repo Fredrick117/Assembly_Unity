@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ModuleConnection : MonoBehaviour
 {
-    public bool IsOccupied;
-    public GameObject LinkedConnector = null;
+    [SerializeField]
+    public bool isOccupied;
+    [SerializeField]
+    public GameObject linkedConnector = null;
 
 }

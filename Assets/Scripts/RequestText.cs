@@ -28,10 +28,6 @@ public class RequestText : MonoBehaviour
 
     public void SetText()
     {
-        Text.text = "";
-        foreach (ShipSubsystemType subsystem in GameManager.Instance.CurrentShipRequest.RequiredSubsystems)
-        {
-            Text.text += (subsystem + "\n");
-        }
+        Text.text = "<color=#FFC500>" + GameManager.Instance.CurrentShipRequest.shipClass.ToString() + "</color>-class";
     }
 }

@@ -13,6 +13,7 @@ TagManager:
   - ShieldGen
   - Reactor
   - LifeSup
+  - ShipPrefab
   layers:
   - Default
   - TransparentFX
