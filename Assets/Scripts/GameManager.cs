@@ -60,12 +60,12 @@ public class GameManager : MonoBehaviour
 
     ShipRequest CreateRandomRequest(int numTypes)
     {
-        List<ShipSubsystemType> list = new List<ShipSubsystemType>();
+        List<SubsystemType> list = new List<SubsystemType>();
 
         // Add a few random required subsystems
         for (int i = 0; i < numTypes; i++)
         {
-            ShipSubsystemType subsystem = GetRandomSubsystem();
+            SubsystemType subsystem = GetRandomSubsystem();
             if (!list.Contains(subsystem))
             {
                 list.Add(subsystem);
@@ -78,9 +78,9 @@ public class GameManager : MonoBehaviour
         return request;
     }
 
-    ShipSubsystemType GetRandomSubsystem()
+    SubsystemType GetRandomSubsystem()
     {
-        return (ShipSubsystemType)Random.Range(0, (int)System.Enum.GetValues(typeof(ShipSubsystemType)).Cast<ShipSubsystemType>().Max());
+        return (SubsystemType)Random.Range(0, (int)System.Enum.GetValues(typeof(SubsystemType)).Cast<SubsystemType>().Max());
     }
 
     void CleanUpObjects()

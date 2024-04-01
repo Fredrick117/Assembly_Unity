@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,7 @@ public class Draggable : MonoBehaviour
         if (isDragging)
         {
             transform.position = new Vector3(mousePosition.x + offset.x, mousePosition.y + offset.y, transform.position.z);
+            //transform.position = new Vector3((float)Math.Round(mousePosition.x), (float)Math.Round(mousePosition.y), transform.position.z);
         }
     }
 
