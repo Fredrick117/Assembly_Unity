@@ -15,5 +15,5 @@ public class ModuleConnection : MonoBehaviour
     public ConnectorType Type;
     public Sprite ConnectorSprite;
     public GameObject LinkedConnector = null;
-
+    public bool left = true;
 }

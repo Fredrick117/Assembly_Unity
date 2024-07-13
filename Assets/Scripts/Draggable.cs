@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class DraggableModule : MonoBehaviour
+public class Draggable : MonoBehaviour
 {
     private bool IsDragging = false;
     private Vector3 Offset;
@@ -39,8 +39,6 @@ public class DraggableModule : MonoBehaviour
 
     private void OnMouseDown()
     {
-
-
         Offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         IsDragging = true;
         InitialPickupPosition = transform.position;
@@ -88,13 +86,32 @@ public class DraggableModule : MonoBehaviour
             }
         }
 
-        if (ClosestChildConnector != null && ClosestOtherConnector != null && !ClosestOtherConnector.GetComponent<ModuleConnection>().IsOccupied)
+        if (ClosestChildConnector != null && ClosestOtherConnector != null)
         {
-            transform.position = ClosestOtherConnector.transform.position - ClosestChildConnector.transform.localPosition;
-            ClosestOtherConnector.GetComponent<ModuleConnection>().IsOccupied = true;
-            ClosestChildConnector.GetComponent<ModuleConnection>().IsOccupied = true;
-            ClosestChildConnector.GetComponent<ModuleConnection>().LinkedConnector = ClosestOtherConnector;
-            ClosestOtherConnector.GetComponent<ModuleConnection>().LinkedConnector = ClosestChildConnector;
+            ModuleConnection OtherConnector = ClosestOtherConnector.GetComponent<ModuleConnection>();
+            ModuleConnection ThisConnector = ClosestChildConnector.GetComponent<ModuleConnection>();
+
+            if (OtherConnector.left != ThisConnector.left)
+            {
+
+                if (!OtherConnector.IsOccupied)
+                {
+                    //transform.position = ClosestOtherConnector.transform.position - ClosestChildConnector.transform.localPosition;
+
+                    float selfConnectorOffset = ThisConnector.transform.position.x - transform.position.x;
+                    float otherConnectorOffset = OtherConnector.transform.position.x - OtherConnector.transform.parent.position.x;
+
+                    if (OtherConnector.left)
+                    {
+                        transform.position = OtherConnector.transform.parent.position - new Vector3((otherConnectorOffset * -1) + selfConnectorOffset, 0, 0);
+                    }
+
+                    ClosestOtherConnector.GetComponent<ModuleConnection>().IsOccupied = true;
+                    ClosestChildConnector.GetComponent<ModuleConnection>().IsOccupied = true;
+                    ClosestChildConnector.GetComponent<ModuleConnection>().LinkedConnector = ClosestOtherConnector;
+                    ClosestOtherConnector.GetComponent<ModuleConnection>().LinkedConnector = ClosestChildConnector;
+                }
+            }
         }
     }
 }
