@@ -7,111 +7,109 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour
 {
-    private bool IsDragging = false;
-    private Vector3 Offset;
+    public bool isDragging = false;
+    private Vector3 offset;
 
-    private Transform[] ConnectorsArray;
+    private Transform[] connectorsArray;
 
-    private Vector3 InitialPickupPosition;
+    private Vector3 initialPickupPosition;
 
     private bool isOver;
 
+    private Rigidbody2D rb;
+
+    public float snapDistance = 0.025f;
+
+    [SerializeField]
+    private Color validPlacementColor = Color.green;
+    [SerializeField]
+    private Color invalidPlacementColor = Color.red;
+
+    [SerializeField]
+    private SpriteRenderer hullSprite;
+
+    private bool isCollidingWithOtherObject = false;
+
     private void Start()
     {
-        ConnectorsArray = gameObject.transform.GetComponentsInChildren<Transform>();
-        ConnectorsArray = ConnectorsArray.Where(child => child.tag == "Connector").ToArray();
+        connectorsArray = gameObject.transform.GetComponentsInChildren<Transform>();
+        connectorsArray = connectorsArray.Where(child => child.tag == "Connector").ToArray();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (IsDragging)
+        if (isDragging)
         {
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Offset;
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 roundedPosition = new Vector3(Mathf.Round(mousePosition.x), Mathf.Round(mousePosition.y), mousePosition.z);
+            rb.position = roundedPosition;
+
+            hullSprite.color = CanPlace() ? validPlacementColor : invalidPlacementColor;
         }
     }
 
-    private void OnMouseOver()
+    private bool HasValidConnectorNearby()
     {
-        if (Input.GetMouseButtonDown(1))
-            Destroy(gameObject);
+        Collider2D[] collisions = Physics2D.OverlapCircleAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), snapDistance);
+        
+        foreach (Collider2D col in collisions)
+        {
+            if (col.gameObject.tag == "Connector")
+                return true;
+        }
+
+        return false;
     }
 
     private void OnMouseDown()
     {
-        Offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        IsDragging = true;
-        InitialPickupPosition = transform.position;
+        offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        isDragging = true;
 
-        for (int i = 0; i < ConnectorsArray.Length; i++)
-        {
-            ModuleConnection Connection = ConnectorsArray[i].gameObject.GetComponent<ModuleConnection>();
-            if (Connection.LinkedConnector != null)
-            {
-                Connection.IsOccupied = false;
-                Connection.LinkedConnector.GetComponent<ModuleConnection>().IsOccupied = false;
-                Connection.LinkedConnector.GetComponent<ModuleConnection>().LinkedConnector = null;
-                Connection.LinkedConnector = null;
-            }
-        }
+        initialPickupPosition = transform.position;
+
+        //for (int i = 0; i < ConnectorsArray.Length; i++)
+        //{
+        //    ModuleConnection Connection = ConnectorsArray[i].gameObject.GetComponent<ModuleConnection>();
+        //    if (Connection.LinkedConnector != null)
+        //    {
+        //        Connection.IsOccupied = false;
+        //        Connection.LinkedConnector.GetComponent<ModuleConnection>().IsOccupied = false;
+        //        Connection.LinkedConnector.GetComponent<ModuleConnection>().LinkedConnector = null;
+        //        Connection.LinkedConnector = null;
+        //    }
+        //}
     }
 
     private void OnMouseUp()
     {
-        IsDragging = false;
-        float ClosestConnectorDistance = 99999.0f;
-        GameObject ClosestOtherConnector = null;
-        GameObject ClosestChildConnector = null;
+        isDragging = false;
 
-        // Check if any of this object's connectors are close to another object's connector
-        for (int i = 0; i < ConnectorsArray.Length; i++)
+        if (!CanPlace())
         {
-            Collider2D[] HitColliders = Physics2D.OverlapCircleAll(transform.position, 1.0f);
-
-            if (HitColliders.Length == 0)
-                continue;
-
-            foreach (var Hit in HitColliders)
-            {
-                float Distance = Vector2.Distance(ConnectorsArray[i].transform.position, Hit.gameObject.transform.position);
-
-                if (Hit.gameObject.tag == "Connector"
-                && Distance < ClosestConnectorDistance
-                && Hit.gameObject.transform.parent != gameObject.transform)
-                {
-                    ClosestConnectorDistance = Distance;
-                    ClosestOtherConnector = Hit.gameObject;
-                    ClosestChildConnector = ConnectorsArray[i].gameObject;
-                }
-            }
+            transform.position = initialPickupPosition;
+        }
+        else
+        {
+            // TODO: placement
         }
 
-        if (ClosestChildConnector != null && ClosestOtherConnector != null)
-        {
-            ModuleConnection OtherConnector = ClosestOtherConnector.GetComponent<ModuleConnection>();
-            ModuleConnection ThisConnector = ClosestChildConnector.GetComponent<ModuleConnection>();
+        hullSprite.color = Color.white;
+    }
 
-            if (OtherConnector.left != ThisConnector.left)
-            {
+    private bool CanPlace()
+    {
+        return !isCollidingWithOtherObject;
+    }
 
-                if (!OtherConnector.IsOccupied)
-                {
-                    //transform.position = ClosestOtherConnector.transform.position - ClosestChildConnector.transform.localPosition;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        isCollidingWithOtherObject = true;
+    }
 
-                    float selfConnectorOffset = ThisConnector.transform.position.x - transform.position.x;
-                    float otherConnectorOffset = OtherConnector.transform.position.x - OtherConnector.transform.parent.position.x;
-
-                    if (OtherConnector.left)
-                    {
-                        transform.position = OtherConnector.transform.parent.position - new Vector3((otherConnectorOffset * -1) + selfConnectorOffset, 0, 0);
-                    }
-
-                    ClosestOtherConnector.GetComponent<ModuleConnection>().IsOccupied = true;
-                    ClosestChildConnector.GetComponent<ModuleConnection>().IsOccupied = true;
-                    ClosestChildConnector.GetComponent<ModuleConnection>().LinkedConnector = ClosestOtherConnector;
-                    ClosestOtherConnector.GetComponent<ModuleConnection>().LinkedConnector = ClosestChildConnector;
-                }
-            }
-        }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        isCollidingWithOtherObject = false;
     }
 }
