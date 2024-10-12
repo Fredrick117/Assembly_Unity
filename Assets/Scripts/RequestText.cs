@@ -29,7 +29,7 @@ public class RequestText : MonoBehaviour
     public void SetText()
     {
         Text.text = "";
-        foreach (ShipSubsystemType subsystem in GameManager.Instance.CurrentShipRequest.RequiredSubsystems)
+        foreach (ShipSubsystemType subsystem in GameManager.Instance.currentShipRequest.RequiredSubsystems)
         {
             Text.text += (subsystem + "\n");
         }

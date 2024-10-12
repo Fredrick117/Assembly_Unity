@@ -2,24 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public ShipRequest CurrentShipRequest;
+    public ShipRequest currentShipRequest;
 
     delegate void TestFunc(ShipRequest Request);
-    TestFunc CreateNewShipRequest;
+    TestFunc createNewShipRequest;
 
     [SerializeField]
     private int numSubsystemTypes = 4;
 
-    private GameObject AssemblyAreaObject;
-    public GameObject RequestUI;
+    private GameObject assemblyAreaObject;
+    public GameObject requestUI;
 
-    public GameObject MoneyCounter;
+    public GameObject moneyCounter;
+
+    [HideInInspector]
+    public GameObject currentlyDraggedObject = null;
+
+    [HideInInspector]
+    public GameObject currentRoot = null;
 
     private void Awake()
     {
@@ -40,11 +45,11 @@ public class GameManager : MonoBehaviour
         //     list.Add((ShipSubsystemType)Random.Range(0, (int)System.Enum.GetValues(typeof(ShipSubsystemType)).Cast<ShipSubsystemType>().Max()));
         // }
 
-        // CurrentShipRequest = new ShipRequest(list, Random.Range(10.0f, 30.0f));
+        // currentShipRequest = new ShipRequest(list, Random.Range(10.0f, 30.0f));
 
-        CurrentShipRequest = CreateRandomRequest(numSubsystemTypes);
+        currentShipRequest = CreateRandomRequest(numSubsystemTypes);
 
-        AssemblyAreaObject = GameObject.FindGameObjectWithTag("AssemblyArea");
+        assemblyAreaObject = GameObject.FindGameObjectWithTag("AssemblyArea");
     }
 
     void Update()
@@ -65,7 +70,7 @@ public class GameManager : MonoBehaviour
     void CheckAgainstRequest()
     {
         List<ShipSubsystemType> SatisfiedRequests = new List<ShipSubsystemType>();
-        List<GameObject> ShipParts = AssemblyAreaObject.GetComponent<AssemblyArea>().ObjectsInArea;
+        List<GameObject> ShipParts = assemblyAreaObject.GetComponent<AssemblyArea>().ObjectsInArea;
 
         if (ShipParts.Count > 0)
         {
@@ -75,25 +80,25 @@ public class GameManager : MonoBehaviour
                 {
                     if (t.gameObject.tag == "Room")
                     {
-                        Room room = t.gameObject.GetComponent<Room>();
-                        if (room.InstalledSubsystems != null)
-                        {
-                            foreach (var subsystem in room.InstalledSubsystems)
-                            {
-                                if (subsystem.tag == "Reactor" && !SatisfiedRequests.Contains(ShipSubsystemType.REACTOR))
-                                {
-                                    SatisfiedRequests.Add(ShipSubsystemType.REACTOR);
-                                }
-                                else if (subsystem.tag == "ShieldGen" && !SatisfiedRequests.Contains(ShipSubsystemType.SHIELDS))
-                                {
-                                    SatisfiedRequests.Add(ShipSubsystemType.SHIELDS);
-                                }
-                                else if (subsystem.tag == "LifeSup" && !SatisfiedRequests.Contains(ShipSubsystemType.LIFE_SUPPORT))
-                                {
-                                    SatisfiedRequests.Add(ShipSubsystemType.LIFE_SUPPORT);
-                                }
-                            }
-                        }
+                        //Room room = t.gameObject.GetComponent<Room>();
+                        //if (room.InstalledSubsystems != null)
+                        //{
+                        //    foreach (var subsystem in room.InstalledSubsystems)
+                        //    {
+                        //        if (subsystem.tag == "Reactor" && !SatisfiedRequests.Contains(ShipSubsystemType.REACTOR))
+                        //        {
+                        //            SatisfiedRequests.Add(ShipSubsystemType.REACTOR);
+                        //        }
+                        //        else if (subsystem.tag == "ShieldGen" && !SatisfiedRequests.Contains(ShipSubsystemType.SHIELDS))
+                        //        {
+                        //            SatisfiedRequests.Add(ShipSubsystemType.SHIELDS);
+                        //        }
+                        //        else if (subsystem.tag == "LifeSup" && !SatisfiedRequests.Contains(ShipSubsystemType.LIFE_SUPPORT))
+                        //        {
+                        //            SatisfiedRequests.Add(ShipSubsystemType.LIFE_SUPPORT);
+                        //        }
+                        //    }
+                        //}
                     }
                 }
             }
@@ -103,18 +108,18 @@ public class GameManager : MonoBehaviour
             print("There's nothing here!");
         }
 
-        if (SatisfiedRequests.All(CurrentShipRequest.RequiredSubsystems.Contains) && CurrentShipRequest.RequiredSubsystems.Count == SatisfiedRequests.Count)
+        if (SatisfiedRequests.All(currentShipRequest.RequiredSubsystems.Contains) && currentShipRequest.RequiredSubsystems.Count == SatisfiedRequests.Count)
         {
             print("nice");
             CleanUpObjects();
-            MoneyCounter.GetComponent<MoneyCount>().IncrementBalance();
-            CurrentShipRequest = CreateRandomRequest(numSubsystemTypes);
-            RequestUI.GetComponent<RequestText>().SetText();
+            moneyCounter.GetComponent<MoneyCount>().IncrementBalance();
+            currentShipRequest = CreateRandomRequest(numSubsystemTypes);
+            requestUI.GetComponent<RequestText>().SetText();
         }
         else
         {
             print("no");
-            MoneyCounter.GetComponent<MoneyCount>().DecrementBalance();
+            moneyCounter.GetComponent<MoneyCount>().DecrementBalance();
         }
     }
 
@@ -162,6 +167,27 @@ public class GameManager : MonoBehaviour
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("LifeSup"))
         {
             GameObject.Destroy(go);
+        }
+    }
+
+    public void BeginDraggingObject(GameObject draggedObject)
+    {
+        print("GameManager: BeginDraggingObject");
+        if (!currentlyDraggedObject)
+        {
+            currentlyDraggedObject = draggedObject;
+        }
+    }
+
+    public void PlaceObject(GameObject draggedObject)
+    {
+        print("GameManager: PlaceObject");
+
+        if (draggedObject.TryGetComponent<Draggable>(out Draggable draggableComponent) &&
+            currentRoot == null)
+        {
+            print("I am the root");
+            currentRoot = draggedObject;
         }
     }
 }

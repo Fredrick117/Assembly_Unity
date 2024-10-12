@@ -12,7 +12,7 @@ public class Draggable : MonoBehaviour
 
     private Transform[] connectorsArray;
 
-    private Vector3 initialPickupPosition;
+    private Vector3 initialPickupPosition = Vector3.negativeInfinity;
 
     private bool isOver;
 
@@ -22,6 +22,7 @@ public class Draggable : MonoBehaviour
 
     [SerializeField]
     private Color validPlacementColor = Color.green;
+
     [SerializeField]
     private Color invalidPlacementColor = Color.red;
 
@@ -29,6 +30,12 @@ public class Draggable : MonoBehaviour
     private SpriteRenderer hullSprite;
 
     private bool isCollidingWithOtherObject = false;
+
+    private void Awake()
+    {
+        GameManager.Instance.BeginDraggingObject(gameObject);
+        isDragging = true;
+    }
 
     private void Start()
     {
@@ -64,41 +71,38 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDown()
     {
-        offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        isDragging = true;
+        //offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //isDragging = true;
 
-        initialPickupPosition = transform.position;
+        //initialPickupPosition = transform.position;
 
-        //for (int i = 0; i < ConnectorsArray.Length; i++)
-        //{
-        //    ModuleConnection Connection = ConnectorsArray[i].gameObject.GetComponent<ModuleConnection>();
-        //    if (Connection.LinkedConnector != null)
-        //    {
-        //        Connection.IsOccupied = false;
-        //        Connection.LinkedConnector.GetComponent<ModuleConnection>().IsOccupied = false;
-        //        Connection.LinkedConnector.GetComponent<ModuleConnection>().LinkedConnector = null;
-        //        Connection.LinkedConnector = null;
-        //    }
-        //}
+        if (isDragging)
+            StopDragging();
+        else
+            BeginDragging();
     }
 
     private void OnMouseUp()
     {
-        isDragging = false;
+        //isDragging = false;
 
-        if (!CanPlace())
-        {
-            transform.position = initialPickupPosition;
-        }
-        else
-        {
-            // TODO: placement
-        }
+        //if (!CanPlace())
+        //{
+        //    transform.position = initialPickupPosition;
+        //}
+        //else
+        //{
+        //    // TODO: placement
+        //}
 
-        hullSprite.color = Color.white;
+        //hullSprite.color = Color.white;
+
+        //GetComponent<ShipModule>().OnPlacement();
+
+        //StopDragging();
     }
 
-    private bool CanPlace()
+    public bool CanPlace()
     {
         return !isCollidingWithOtherObject;
     }
@@ -111,5 +115,36 @@ public class Draggable : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         isCollidingWithOtherObject = false;
+    }
+
+    public void BeginDragging()
+    {
+        offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        isDragging = true;
+
+        initialPickupPosition = transform.position;
+    }
+
+    public void StopDragging()
+    {
+        isDragging = false;
+
+        bool canPlace = CanPlace();
+
+        if (!CanPlace())
+        {
+            if (Vector3.Equals(initialPickupPosition, Vector3.negativeInfinity))
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            transform.position = initialPickupPosition;
+        }
+
+        GameManager.Instance.PlaceObject(gameObject);
+        
+        // TODO: move this to ShipModule class!
+        hullSprite.color = Color.white;
     }
 }
