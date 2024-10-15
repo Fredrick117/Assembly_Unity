@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class ShipModule : MonoBehaviour
 {
-    
+    public bool isConnectedToRoot = false;
+
+    public List<GameObject> connectedModules = new List<GameObject>();
 
     private void Awake()
     {
@@ -24,16 +26,8 @@ public class ShipModule : MonoBehaviour
         
     }
 
-    public void OnPlacement()
+    public void OnModulePlaced(GameObject placedObject)
     {
-        //string output = "placed!";
-        //GameObject[] otherModules = GameObject.FindGameObjectsWithTag("ShipModule");
-        //if (otherModules.Length == 1)
-        //{
-        //    output += " also, I'm the root!";
-        //    isRoot = true;
-        //}
-
-        //print(output);
+        print("yipee!");
     }
 }

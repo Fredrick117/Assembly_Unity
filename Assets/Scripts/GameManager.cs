@@ -172,22 +172,36 @@ public class GameManager : MonoBehaviour
 
     public void BeginDraggingObject(GameObject draggedObject)
     {
-        print("GameManager: BeginDraggingObject");
         if (!currentlyDraggedObject)
         {
             currentlyDraggedObject = draggedObject;
         }
     }
 
-    public void PlaceObject(GameObject draggedObject)
+    public void HandleDraggablePlaced(GameObject draggedObject)
     {
-        print("GameManager: PlaceObject");
-
-        if (draggedObject.TryGetComponent<Draggable>(out Draggable draggableComponent) &&
-            currentRoot == null)
+        if (currentRoot == null)
         {
             print("I am the root");
             currentRoot = draggedObject;
+
+            return;
         }
+
+        if (IsModuleConnectedToRoot())
+        {
+            print("ye");
+        }
+        else
+        {
+            print("nu");
+        }
+    }
+
+    private bool IsModuleConnectedToRoot()
+    {
+        // 1) Check if the connected module is the root itself
+        // 2) Check if the connected module is connected to the root
+        return false;
     }
 }

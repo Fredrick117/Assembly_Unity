@@ -36,7 +36,7 @@ public class ModuleConnection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("I have collided!");
+        //print("I have collided!");
         //if (parentModule.isDragging)
         //{
         //    transform.parent.position = collision.gameObject.transform.parent.GetComponent<Draggable>().transform.position;

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -8,6 +10,7 @@ using UnityEngine.EventSystems;
 public class Draggable : MonoBehaviour
 {
     public bool isDragging = false;
+
     private Vector3 offset;
 
     private Transform[] connectorsArray;
@@ -76,34 +79,34 @@ public class Draggable : MonoBehaviour
 
         //initialPickupPosition = transform.position;
 
+        // --------
+
         if (isDragging)
-            StopDragging();
+        {
+            PlaceObject();
+        }
         else
+        {
             BeginDragging();
-    }
-
-    private void OnMouseUp()
-    {
-        //isDragging = false;
-
-        //if (!CanPlace())
-        //{
-        //    transform.position = initialPickupPosition;
-        //}
-        //else
-        //{
-        //    // TODO: placement
-        //}
-
-        //hullSprite.color = Color.white;
-
-        //GetComponent<ShipModule>().OnPlacement();
-
-        //StopDragging();
+        }
     }
 
     public bool CanPlace()
     {
+        // TODO: can place iff this module is the root OR this module is colliding with a valid component
+        if (!isCollidingWithOtherObject)
+        {
+            return true;
+        }
+
+        if (GameManager.Instance.currentRoot == gameObject && !isCollidingWithOtherObject)
+        {
+            return true;
+        }
+
+        // Check if colliding with valid components
+        
+
         return !isCollidingWithOtherObject;
     }
 
@@ -125,7 +128,7 @@ public class Draggable : MonoBehaviour
         initialPickupPosition = transform.position;
     }
 
-    public void StopDragging()
+    public void PlaceObject()
     {
         isDragging = false;
 
@@ -142,8 +145,8 @@ public class Draggable : MonoBehaviour
             transform.position = initialPickupPosition;
         }
 
-        GameManager.Instance.PlaceObject(gameObject);
-        
+        GameManager.Instance.HandleDraggablePlaced(gameObject);
+
         // TODO: move this to ShipModule class!
         hullSprite.color = Color.white;
     }
