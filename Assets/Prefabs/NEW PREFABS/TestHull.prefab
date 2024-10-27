@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4000652566928393926}
   m_Layer: 0
   m_Name: TestHull
-  m_TagString: ShipModule
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2405688881612167476}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -95,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isConnectedToRoot: 0
   connectedModules: []
+  connectors: []
 --- !u!1 &5808242504581356359
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,9 +105,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3238400342635836274}
-  - component: {fileID: 2842341007955562012}
   - component: {fileID: 278978125282358073}
-  m_Layer: 0
+  - component: {fileID: 5570009434818113505}
+  m_Layer: 8
   m_Name: Connector_L
   m_TagString: Connector
   m_Icon: {fileID: 0}
@@ -129,24 +130,6 @@ Transform:
   - {fileID: 2219246867125560303}
   m_Father: {fileID: 2349794772751283297}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2842341007955562012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5808242504581356359}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b98e93227af84d46b5f13ad1f68cb70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsOccupied: 0
-  Type: 0
-  ConnectorSprite: {fileID: 0}
-  LinkedConnector: {fileID: 0}
-  left: 1
-  parentModule: {fileID: 0}
 --- !u!58 &278978125282358073
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -182,6 +165,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1
+--- !u!114 &5570009434818113505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5808242504581356359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 641fbe015a155d640b518bd4fdadf4f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  connectedModule: {fileID: 0}
 --- !u!1 &6315217040810653898
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +276,7 @@ GameObject:
   - component: {fileID: 5082462132338762414}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: ShipModule
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -394,7 +391,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 0.9}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &7214763430973128221
 GameObject:
@@ -405,9 +402,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8316173550581440345}
-  - component: {fileID: 2236932002222061927}
   - component: {fileID: 8843498539688873674}
-  m_Layer: 0
+  - component: {fileID: 7559319403198705512}
+  m_Layer: 8
   m_Name: Connector_R
   m_TagString: Connector
   m_Icon: {fileID: 0}
@@ -430,24 +427,6 @@ Transform:
   - {fileID: 3143536602351922416}
   m_Father: {fileID: 2349794772751283297}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2236932002222061927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7214763430973128221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b98e93227af84d46b5f13ad1f68cb70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsOccupied: 0
-  Type: 0
-  ConnectorSprite: {fileID: 0}
-  LinkedConnector: {fileID: 0}
-  left: 0
-  parentModule: {fileID: 0}
 --- !u!58 &8843498539688873674
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -483,6 +462,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1
+--- !u!114 &7559319403198705512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7214763430973128221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 641fbe015a155d640b518bd4fdadf4f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  connectedModule: {fileID: 0}
 --- !u!1 &8736157430749706451
 GameObject:
   m_ObjectHideFlags: 0

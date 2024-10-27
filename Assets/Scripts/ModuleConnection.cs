@@ -2,13 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ConnectorType
-{
-    ENGINE,
-    ROOM,
-    WEAPON
-}
-
 public class ModuleConnection : MonoBehaviour
 {
     [HideInInspector]

@@ -7,7 +7,9 @@ public class ShipModule : MonoBehaviour
 {
     public bool isConnectedToRoot = false;
 
-    public List<GameObject> connectedModules = new List<GameObject>();
+    public List<ShipModule> connectedModules = new List<ShipModule>();
+
+    public Connector[] connectors;
 
     private void Awake()
     {
@@ -24,10 +26,5 @@ public class ShipModule : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void OnModulePlaced(GameObject placedObject)
-    {
-        print("yipee!");
     }
 }

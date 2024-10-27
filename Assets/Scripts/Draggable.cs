@@ -13,8 +13,6 @@ public class Draggable : MonoBehaviour
 
     private Vector3 offset;
 
-    private Transform[] connectorsArray;
-
     private Vector3 initialPickupPosition = Vector3.negativeInfinity;
 
     private bool isOver;
@@ -34,6 +32,10 @@ public class Draggable : MonoBehaviour
 
     private bool isCollidingWithOtherObject = false;
 
+    ShipModule shipModule;
+
+    private bool canPlace = false;
+
     private void Awake()
     {
         GameManager.Instance.BeginDraggingObject(gameObject);
@@ -42,45 +44,40 @@ public class Draggable : MonoBehaviour
 
     private void Start()
     {
-        connectorsArray = gameObject.transform.GetComponentsInChildren<Transform>();
-        connectorsArray = connectorsArray.Where(child => child.tag == "Connector").ToArray();
+        shipModule = GetComponentInChildren<ShipModule>();
+        shipModule.connectors = gameObject.transform.GetComponentsInChildren<Connector>();
+
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void SetRoundedPosition()
+    {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 roundedPosition = new Vector3(Mathf.Round(mousePosition.x), Mathf.Round(mousePosition.y), mousePosition.z);
+
+        if (rb.position != (Vector2)roundedPosition)
+        {
+            rb.position = roundedPosition;
+        }
     }
 
     void Update()
     {
         if (isDragging)
         {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 roundedPosition = new Vector3(Mathf.Round(mousePosition.x), Mathf.Round(mousePosition.y), mousePosition.z);
-            rb.position = roundedPosition;
-
-            hullSprite.color = CanPlace() ? validPlacementColor : invalidPlacementColor;
+            SetRoundedPosition();
+            SetCanPlaceModule();
+            OnPositionChanged();
         }
     }
 
-    private bool HasValidConnectorNearby()
+    private void OnPositionChanged()
     {
-        Collider2D[] collisions = Physics2D.OverlapCircleAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), snapDistance);
-        
-        foreach (Collider2D col in collisions)
-        {
-            if (col.gameObject.tag == "Connector")
-                return true;
-        }
-
-        return false;
+        hullSprite.color = canPlace ? validPlacementColor : invalidPlacementColor;
     }
 
     private void OnMouseDown()
     {
-        //offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //isDragging = true;
-
-        //initialPickupPosition = transform.position;
-
-        // --------
-
         if (isDragging)
         {
             PlaceObject();
@@ -91,28 +88,44 @@ public class Draggable : MonoBehaviour
         }
     }
 
-    public bool CanPlace()
+    private void SetCanPlaceModule()
     {
-        // TODO: can place iff this module is the root OR this module is colliding with a valid component
-        if (!isCollidingWithOtherObject)
+        // Only works on initial spawn
+        if (ShipManager.Instance.rootModule == null)
         {
-            return true;
-        }
-
-        if (GameManager.Instance.currentRoot == gameObject && !isCollidingWithOtherObject)
-        {
-            return true;
+            canPlace = true;
+            return;
         }
 
         // Check if colliding with valid components
-        
+        foreach (Connector connector in shipModule.connectors)
+        {
+            Collider2D[] nearbyConnectors = Physics2D.OverlapCircleAll(connector.transform.position, 0.1f, LayerMask.GetMask("Connector"));
 
-        return !isCollidingWithOtherObject;
+            foreach (Collider2D hit in nearbyConnectors)
+            {
+                Connector nearbyConnector = hit.GetComponent<Connector>();
+
+                if (nearbyConnector == null || nearbyConnector == connector || nearbyConnector.transform.IsChildOf(transform))
+                {
+                    continue;
+                }
+
+                // TODO: what if there's more than one connector?
+                if (connector.type == nearbyConnector.type)
+                {
+                    canPlace = true;
+                    return;
+                }
+            }
+        }
+
+        canPlace = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        isCollidingWithOtherObject = true;
+        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -132,9 +145,7 @@ public class Draggable : MonoBehaviour
     {
         isDragging = false;
 
-        bool canPlace = CanPlace();
-
-        if (!CanPlace())
+        if (!canPlace)
         {
             if (Vector3.Equals(initialPickupPosition, Vector3.negativeInfinity))
             {
@@ -149,5 +160,15 @@ public class Draggable : MonoBehaviour
 
         // TODO: move this to ShipModule class!
         hullSprite.color = Color.white;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        foreach (Connector connector in shipModule.connectors)
+        {
+            Gizmos.DrawSphere(connector.transform.position, 0.1f);
+        }
     }
 }

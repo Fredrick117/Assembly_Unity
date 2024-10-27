@@ -23,9 +23,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public GameObject currentlyDraggedObject = null;
 
-    [HideInInspector]
-    public GameObject currentRoot = null;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -180,28 +177,12 @@ public class GameManager : MonoBehaviour
 
     public void HandleDraggablePlaced(GameObject draggedObject)
     {
-        if (currentRoot == null)
+        if (ShipManager.Instance.rootModule == null)
         {
             print("I am the root");
-            currentRoot = draggedObject;
-
-            return;
-        }
-
-        if (IsModuleConnectedToRoot())
-        {
-            print("ye");
-        }
-        else
-        {
-            print("nu");
+            ShipManager.Instance.rootModule = draggedObject;
         }
     }
 
-    private bool IsModuleConnectedToRoot()
-    {
-        // 1) Check if the connected module is the root itself
-        // 2) Check if the connected module is connected to the root
-        return false;
-    }
+    
 }

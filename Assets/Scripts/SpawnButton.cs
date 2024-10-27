@@ -8,20 +8,17 @@ public class SpawnButton : MonoBehaviour, IPointerDownHandler
     [SerializeField]
     private GameObject objectToSpawn;
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        SpawnObject();
-    }
+    private int test;
 
-    public void SpawnObject()
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (GameManager.Instance.currentlyDraggedObject != null)
         {
             GameManager.Instance.currentlyDraggedObject = null;
         }
 
-        print("SpawnButton: SpawnObject");
-
-        GameObject spawnedObject = GameObject.Instantiate(objectToSpawn, (Vector2)Input.mousePosition, Quaternion.identity);
+        GameObject spawnedModule = GameObject.Instantiate(objectToSpawn, (Vector2)Input.mousePosition, Quaternion.identity);
+        spawnedModule.name = spawnedModule.name + " " + test;
+        test++;
     }
 }
