@@ -53,7 +53,7 @@ public class Draggable : MonoBehaviour
     private void SetRoundedPosition()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 roundedPosition = new Vector3(Mathf.Round(mousePosition.x), Mathf.Round(mousePosition.y), mousePosition.z);
+        Vector3 roundedPosition = new Vector3(Mathf.Round(mousePosition.x * 2f) / 2f, Mathf.Round(mousePosition.y * 2f) / 2f, mousePosition.z);
 
         if (rb.position != (Vector2)roundedPosition)
         {
@@ -162,13 +162,13 @@ public class Draggable : MonoBehaviour
         hullSprite.color = Color.white;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.green;
 
-        foreach (Connector connector in shipModule.connectors)
-        {
-            Gizmos.DrawSphere(connector.transform.position, 0.1f);
-        }
-    }
+    //    foreach (Connector connector in shipModule.connectors)
+    //    {
+    //        Gizmos.DrawSphere(connector.transform.position, 0.1f);
+    //    }
+    //}
 }
