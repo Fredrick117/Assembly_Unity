@@ -27,11 +27,6 @@ public class SpawnButton : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (GameManager.Instance.currentlyDraggedObject != null)
-        {
-            GameManager.Instance.currentlyDraggedObject = null;
-        }
-
-        GameObject spawnedModule = GameObject.Instantiate(objectToSpawn, (Vector2)Input.mousePosition, Quaternion.identity);
+        GameManager.Instance.SpawnObjectFromButton(objectToSpawn);
     }
 }

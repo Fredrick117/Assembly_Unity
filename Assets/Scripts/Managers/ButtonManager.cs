@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class ButtonManager : MonoBehaviour
 {
+    public string startScene = "TestScene";
+
     public void OnStart()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(startScene);
     }
 
     public void OnQuit()

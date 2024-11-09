@@ -14,9 +14,11 @@ public enum ConnectorType
 
 public class Connector : MonoBehaviour
 {
+    private bool isOccupied = false;
+
     public ConnectorType type;
 
-    public ShipModule connectedModule = null;
+    public GameObject connectedObject = null;
 
     public Color connectorColor = Color.black;
 
@@ -45,35 +47,14 @@ public class Connector : MonoBehaviour
         }
     }
 
-        // Update is called once per frame
-        void Update()
+    public void Connect(bool isOccupied)
     {
-        
+        if (this.isOccupied != isOccupied)
+            this.isOccupied = isOccupied;
     }
 
-    //private void OnValidate()
-    //{
-    //    switch (type)
-    //    {
-    //        case ConnectorType.Type1:
-    //            spriteRenderer.color = Color.red;
-    //            break;
-
-    //        case ConnectorType.Type2:
-    //            spriteRenderer.color = Color.green;
-    //            break;
-
-    //        case ConnectorType.Type3:
-    //            spriteRenderer.color = Color.blue;
-    //            break;
-
-    //        default:
-    //            break;
-    //    }
-    //}
-
-    public void ConnectToModule(ShipModule newModule)
+    public void SetConnectedObject(GameObject newObject)
     {
-        connectedModule = newModule;
+        connectedObject = newObject;
     }
 }
