@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2349794772751283297}
   - component: {fileID: 5797462438548134492}
   - component: {fileID: 7036417838093884183}
-  - component: {fileID: 4000652566928393926}
   m_Layer: 0
   m_Name: TestHull 1x3
   m_TagString: Untagged
@@ -81,21 +80,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4000652566928393926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2405688881612167476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a25a9b9427ce4c546a6b4cf786be4fe5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isConnectedToRoot: 0
-  connectedModules: []
-  connectors: []
 --- !u!1 &5808242504581356359
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +162,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  connectedModule: {fileID: 0}
+  connectedObject: {fileID: 0}
+  connectorColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &6315217040810653898
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,7 +259,8 @@ GameObject:
   - component: {fileID: 5273587434888730497}
   - component: {fileID: 1345754656832015607}
   - component: {fileID: 5082462132338762414}
-  m_Layer: 0
+  - component: {fileID: 3599071660908659921}
+  m_Layer: 7
   m_Name: Square
   m_TagString: ShipModule
   m_Icon: {fileID: 0}
@@ -391,8 +377,24 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.85, y: 0.85}
   m_EdgeRadius: 0
+--- !u!114 &3599071660908659921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7166550648812915394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a25a9b9427ce4c546a6b4cf786be4fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isConnectedToRoot: 0
+  isCollidingWithShipModule: 0
+  connectedModules: []
+  connectors: []
 --- !u!1 &7214763430973128221
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +477,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  connectedModule: {fileID: 0}
+  connectedObject: {fileID: 0}
+  connectorColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &8736157430749706451
 GameObject:
   m_ObjectHideFlags: 0

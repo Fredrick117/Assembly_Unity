@@ -15,8 +15,6 @@ public class Draggable : MonoBehaviour
 
     private Vector3 initialPickupPosition = Vector3.negativeInfinity;
 
-    private bool isOver;
-
     private Rigidbody2D rb;
 
     public float snapDistance = 0.025f;
@@ -30,16 +28,18 @@ public class Draggable : MonoBehaviour
     [SerializeField]
     private SpriteRenderer hullSprite;
 
-    private bool isCollidingWithOtherObject = false;
-
-    ShipModule shipModule;
+    private ShipModule shipModule;
 
     private bool canPlace = false;
 
+    private DraggableManager draggableManager;
+
     private void Awake()
     {
-        GameManager.Instance.BeginDraggingObject(gameObject);
-        isDragging = true;
+        draggableManager = GameObject.Find("DraggableManager").GetComponent<DraggableManager>();
+        draggableManager.BeginDraggingObject(this);
+
+        //isDragging = true;
     }
 
     private void Start()
@@ -97,9 +97,23 @@ public class Draggable : MonoBehaviour
             return;
         }
 
+        // if (shipModule.isCollidingWithShipModule)
+        // {
+        //     print("cannot place");
+        //     canPlace = false;
+        //     return;
+        // }
+
+        if (shipModule.IsColliding())
+        {
+            canPlace = false;
+            return;
+        }
+
         // Check if colliding with valid components
         foreach (Connector connector in shipModule.connectors)
         {
+            print(connector.name);
             Collider2D[] nearbyConnectors = Physics2D.OverlapCircleAll(connector.transform.position, 0.1f, LayerMask.GetMask("Connector"));
 
             foreach (Collider2D hit in nearbyConnectors)
@@ -121,16 +135,6 @@ public class Draggable : MonoBehaviour
         }
 
         canPlace = false;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        isCollidingWithOtherObject = false;
     }
 
     public void BeginDragging()
@@ -156,7 +160,7 @@ public class Draggable : MonoBehaviour
             transform.position = initialPickupPosition;
         }
 
-        GameManager.Instance.HandleDraggablePlaced(gameObject);
+        draggableManager.PlaceDraggable(gameObject);
 
         // TODO: move this to ShipModule class!
         hullSprite.color = Color.white;

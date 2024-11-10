@@ -5,7 +5,7 @@ using UnityEngine;
 public class DraggableManager : MonoBehaviour
 {
     [HideInInspector]
-    public GameObject currentlyDraggedObject = null;
+    public Draggable currentlyDraggedObject = null;
 
     // Start is called before the first frame update
     void Start()
@@ -17,5 +17,22 @@ public class DraggableManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void PlaceDraggable(GameObject draggedObject)
+    {
+        if (ShipManager.Instance.rootModule == null)
+        {
+            print("I am the root");
+            ShipManager.Instance.rootModule = draggedObject;
+        }
+    }
+
+    public void BeginDraggingObject(Draggable draggedObject)
+    {
+        if (!currentlyDraggedObject)
+        {
+            currentlyDraggedObject = draggedObject;
+        }
     }
 }

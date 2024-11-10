@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject moneyCounter;
 
+    // TODO: implement
+    public bool holdToDrag = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -35,30 +38,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void BeginDraggingObject(GameObject draggedObject)
-    {
-        if (!draggableManager.currentlyDraggedObject)
-        {
-            draggableManager.currentlyDraggedObject = draggedObject;
-        }
-    }
-
-    public void HandleDraggablePlaced(GameObject draggedObject)
-    {
-        if (ShipManager.Instance.rootModule == null)
-        {
-            print("I am the root");
-            ShipManager.Instance.rootModule = draggedObject;
-        }
-    }
-
     public void SpawnObjectFromButton(GameObject newObject)
     {
         GameObject spawnedObject = GameObject.Instantiate(newObject, (Vector2)Input.mousePosition, Quaternion.identity);
 
         if (spawnedObject != null)
         {
-            draggableManager.currentlyDraggedObject = spawnedObject;
+            // TODO: what if object doesn't have Draggable component?
+            draggableManager.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
+            spawnedObject.GetComponent<Draggable>().isDragging = true;
         }
         else
         {
