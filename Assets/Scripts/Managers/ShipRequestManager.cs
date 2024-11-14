@@ -18,8 +18,16 @@ public class ShipRequestManager : MonoBehaviour
 
     private TMP_Text requestText;
 
+    private GameObject textPrefab;
+
     private void Awake()
     {
+        ShipType shipType = Utilities.GetRandomEnumValue<ShipType>();
+        float maxMoney = Random.Range(7500f, 10000f);
+        int minSpeed = Random.Range(5, 10);
+        
+        print("SHIP TYPE: " + shipType.ToString() + " | MAX MONEY: " + maxMoney.ToString() + " | MIN SPEED: " + minSpeed.ToString());
+        
         // List<ShipSubsystemType> list = new List<ShipSubsystemType>();
 
         // // Add a few random required subsystems

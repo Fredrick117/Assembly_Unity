@@ -1,0 +1,15 @@
+{
+    "ShipRequests":
+    [
+        {
+            "MaxSpeed": 1000000.0,
+            "ShipType" : "Science",
+            "ShipClass" : "Exploration"
+        },
+        {
+            "ShipType" : "War",
+            "ShipClass" : "Corvette",
+            "MinSpeed" : 5000
+        }
+    ]
+}

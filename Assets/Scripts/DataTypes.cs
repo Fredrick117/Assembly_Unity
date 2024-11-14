@@ -5,15 +5,18 @@ using UnityEngine;
 [System.Serializable]
 public enum ShipSubsystemType
 {
-    // THRUSTER,
     REACTOR,
-    // MEDBAY,
-    // NAVIGATION,
-    // WEAPON,
+    NAVIGATION,
     LIFE_SUPPORT,
-    // REPAIR,
     SHIELDS,
-    // HANGAR
+}
+
+[System.Serializable]
+public enum ShipType
+{
+    WARSHIP,
+    EXPLORATION,
+    CARGO,
 }
 
 [System.Serializable]
