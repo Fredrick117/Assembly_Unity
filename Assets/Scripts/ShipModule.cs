@@ -1,8 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ModuleType
+{
+    Hangar,
+    Engine,
+    Cockpit
+}
+
 public class ShipModule : MonoBehaviour
 {
+    public ModuleType moduleType;
+
     [HideInInspector]
     public bool isConnectedToRoot = false;
 
@@ -23,7 +32,7 @@ public class ShipModule : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        connectors = gameObject.transform.GetComponentsInChildren<Connector>();
     }
 
     // Update is called once per frame

@@ -2,14 +2,22 @@
     "ShipRequests":
     [
         {
-            "MaxSpeed": 1000000.0,
-            "ShipType" : "Science",
-            "ShipClass" : "Exploration"
+            "Purpose" : "Military",
+            "ShipType" : "Corvette",
+            "Speed" : {
+                "Min" : 70,
+                "Max" : 90
+            },
+            "BudgetRange" : {
+                "Min" : 500, 
+                "Max" : 1000
+            },
+            "AI" : false,
+            "RequiredSubsystems" : [
+                "Shields",
+                "Cloaking"
+            ],
+            "ShieldLevel" : 1
         },
-        {
-            "ShipType" : "War",
-            "ShipClass" : "Corvette",
-            "MinSpeed" : 5000
-        }
     ]
 }

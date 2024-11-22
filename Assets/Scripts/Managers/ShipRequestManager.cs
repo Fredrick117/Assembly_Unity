@@ -56,6 +56,25 @@ public class ShipRequestManager : MonoBehaviour
         currentShipRequest = CreateRandomRequest(numSubsystemTypes);
     }
 
+    private void OnSubmission()
+    {
+        IsValidShip();
+    }
+
+    private bool IsValidShip()
+    {
+        GameObject root = ShipManager.Instance.rootModule;
+        foreach (Connector connector in root.GetComponent<ShipModule>().connectors)
+        {
+            if (!connector.connectedObject)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     // Check to see if the ship in the assembly area matches the requirements provided
     public void CheckAgainstRequest()
     {

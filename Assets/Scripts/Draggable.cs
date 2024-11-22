@@ -45,7 +45,6 @@ public class Draggable : MonoBehaviour
     private void Start()
     {
         shipModule = GetComponentInChildren<ShipModule>();
-        shipModule.connectors = gameObject.transform.GetComponentsInChildren<Connector>();
 
         rb = GetComponent<Rigidbody2D>();
     }
