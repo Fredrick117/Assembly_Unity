@@ -3,12 +3,13 @@ using UnityEngine;
 
 public enum ModuleType
 {
+    Hull,
     Hangar,
     Engine,
     Cockpit
 }
 
-public class ShipModule : MonoBehaviour
+public class ShipModule : Draggable
 {
     public ModuleType moduleType;
 
@@ -32,7 +33,8 @@ public class ShipModule : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        connectors = gameObject.transform.GetComponentsInChildren<Connector>();
+        connectors = gameObject.GetComponentsInChildren<Connector>();
+        print("Num of connectors: " + connectors.Length);
     }
 
     // Update is called once per frame
@@ -57,8 +59,9 @@ public class ShipModule : MonoBehaviour
         {
             foreach (Collider2D col in collisions)
             {
-                if (col.gameObject.CompareTag("ShipModule") && col.gameObject != gameObject)
+                if (col.gameObject.CompareTag("ShipModule") && !Utilities.IsChild(gameObject, col.gameObject))
                 {
+                    print(col.gameObject.name);
                     return true;
                 }
             }
@@ -66,23 +69,4 @@ public class ShipModule : MonoBehaviour
 
         return false;
     }
-
-    // private void OnTriggerEnter2D(Collider2D collider)
-    // {
-    //     if (collider.gameObject.CompareTag("ShipModule"))
-    //     {
-    //         print("entering");
-    //         isCollidingWithShipModule = true;
-    //     }
-    // }
-
-    // private void OnTriggerExit2D(Collider2D collider)
-    // {
-    //     if (collider.gameObject.CompareTag("ShipModule"))
-    //     {
-    //         isCollidingWithShipModule = false;
-        
-    //         print("leaving");
-    //     }
-    // }
 }

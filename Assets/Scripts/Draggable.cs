@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour
@@ -38,13 +34,11 @@ public class Draggable : MonoBehaviour
     {
         draggableManager = GameObject.Find("DraggableManager").GetComponent<DraggableManager>();
         draggableManager.BeginDraggingObject(this);
-
-        //isDragging = true;
     }
 
     private void Start()
     {
-        shipModule = GetComponentInChildren<ShipModule>();
+        shipModule = GetComponent<ShipModule>();
 
         rb = GetComponent<Rigidbody2D>();
     }
@@ -89,22 +83,15 @@ public class Draggable : MonoBehaviour
 
     private void SetCanPlaceModule()
     {
-        // Only works on initial spawn
         if (ShipManager.Instance.rootModule == null)
         {
             canPlace = true;
             return;
         }
 
-        // if (shipModule.isCollidingWithShipModule)
-        // {
-        //     print("cannot place");
-        //     canPlace = false;
-        //     return;
-        // }
-
         if (shipModule.IsColliding())
         {
+            print("Cannot place, is colliding!");
             canPlace = false;
             return;
         }
@@ -112,7 +99,7 @@ public class Draggable : MonoBehaviour
         // Check if colliding with valid components
         foreach (Connector connector in shipModule.connectors)
         {
-            print(connector.name);
+            print("connector: " + connector.name);
             Collider2D[] nearbyConnectors = Physics2D.OverlapCircleAll(connector.transform.position, 0.1f, LayerMask.GetMask("Connector"));
 
             foreach (Collider2D hit in nearbyConnectors)
@@ -164,6 +151,18 @@ public class Draggable : MonoBehaviour
         // TODO: move this to ShipModule class!
         hullSprite.color = Color.white;
     }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        print("dragging!");
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        print("pointer down!");
+    }
+
+
 
     //private void OnDrawGizmos()
     //{
