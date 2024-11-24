@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2349794772751283297}
-  - component: {fileID: 5797462438548134492}
   - component: {fileID: 7036417838093884183}
   - component: {fileID: 172515908459071761}
+  - component: {fileID: 1099169550842844425}
   m_Layer: 0
   m_Name: TestHull 1x4
   m_TagString: Untagged
@@ -37,23 +37,6 @@ Transform:
   - {fileID: 3238400342635836274}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5797462438548134492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2405688881612167476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f306be0732421a64ab9b65fdb7c1ec91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDragging: 0
-  snapDistance: 0.025
-  validPlacementColor: {r: 0, g: 1, b: 0, a: 1}
-  invalidPlacementColor: {r: 1, g: 0, b: 0, a: 1}
-  hullSprite: {fileID: 1345754656832015607}
 --- !u!50 &7036417838093884183
 Rigidbody2D:
   serializedVersion: 4
@@ -100,6 +83,23 @@ MonoBehaviour:
   connectors:
   - {fileID: 7559319403198705512}
   - {fileID: 5570009434818113505}
+--- !u!114 &1099169550842844425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2405688881612167476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f306be0732421a64ab9b65fdb7c1ec91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDragging: 0
+  snapDistance: 0.025
+  validPlacementColor: {r: 0, g: 1, b: 0, a: 1}
+  invalidPlacementColor: {r: 1, g: 0, b: 0, a: 1}
+  hullSprite: {fileID: 1345754656832015607}
 --- !u!1 &5808242504581356359
 GameObject:
   m_ObjectHideFlags: 0

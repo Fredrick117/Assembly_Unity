@@ -9,7 +9,7 @@ public enum ModuleType
     Cockpit
 }
 
-public class ShipModule : Draggable
+public class ShipModule : MonoBehaviour
 {
     public ModuleType moduleType;
 

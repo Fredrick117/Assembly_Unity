@@ -71,6 +71,7 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDown()
     {
+        print("on mouse down");
         if (isDragging)
         {
             PlaceObject();
@@ -91,7 +92,7 @@ public class Draggable : MonoBehaviour
 
         if (shipModule.IsColliding())
         {
-            print("Cannot place, is colliding!");
+            Debug.LogError("Cannot place, is colliding!");
             canPlace = false;
             return;
         }
@@ -99,7 +100,6 @@ public class Draggable : MonoBehaviour
         // Check if colliding with valid components
         foreach (Connector connector in shipModule.connectors)
         {
-            print("connector: " + connector.name);
             Collider2D[] nearbyConnectors = Physics2D.OverlapCircleAll(connector.transform.position, 0.1f, LayerMask.GetMask("Connector"));
 
             foreach (Collider2D hit in nearbyConnectors)
@@ -125,6 +125,7 @@ public class Draggable : MonoBehaviour
 
     public void BeginDragging()
     {
+        print("begin dragging");
         offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         isDragging = true;
 
@@ -133,6 +134,7 @@ public class Draggable : MonoBehaviour
 
     public void PlaceObject()
     {
+        print("place object");
         isDragging = false;
 
         if (!canPlace)
@@ -151,18 +153,6 @@ public class Draggable : MonoBehaviour
         // TODO: move this to ShipModule class!
         hullSprite.color = Color.white;
     }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        print("dragging!");
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        print("pointer down!");
-    }
-
-
 
     //private void OnDrawGizmos()
     //{
