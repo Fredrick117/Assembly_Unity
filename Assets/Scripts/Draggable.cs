@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour
 {
-    public bool isDragging = false;
+    private bool isDragging = false;
 
     private Vector3 offset;
 
@@ -28,12 +28,9 @@ public class Draggable : MonoBehaviour
 
     private bool canPlace = false;
 
-    private DraggableManager draggableManager;
-
     private void Awake()
     {
-        draggableManager = GameObject.Find("DraggableManager").GetComponent<DraggableManager>();
-        draggableManager.BeginDraggingObject(this);
+
     }
 
     private void Start()
@@ -71,20 +68,23 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDown()
     {
-        print("on mouse down");
-        if (isDragging)
+        // Send message to DraggableManager, see if this can be dragged
+
+        if (this.isDragging)
         {
+            print("place object");
             PlaceObject();
         }
         else
         {
+            print("begin dragging");
             BeginDragging();
         }
     }
 
     private void SetCanPlaceModule()
     {
-        if (ShipManager.Instance.rootModule == null)
+        if (ShipManager.Instance.rootModule == null || ShipManager.Instance.rootModule == this.gameObject)
         {
             canPlace = true;
             return;
@@ -134,7 +134,6 @@ public class Draggable : MonoBehaviour
 
     public void PlaceObject()
     {
-        print("place object");
         isDragging = false;
 
         if (!canPlace)
@@ -148,7 +147,11 @@ public class Draggable : MonoBehaviour
             transform.position = initialPickupPosition;
         }
 
-        draggableManager.PlaceDraggable(gameObject);
+        if (ShipManager.Instance.rootModule == null)
+        {
+            print("I am the root!");
+            ShipManager.Instance.rootModule = gameObject;
+        }
 
         // TODO: move this to ShipModule class!
         hullSprite.color = Color.white;

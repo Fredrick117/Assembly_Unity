@@ -1,23 +1,15 @@
 {
-    "ShipRequests":
-    [
-        {
-            "Purpose" : "Military",
-            "ShipType" : "Corvette",
-            "Speed" : {
-                "Min" : 70,
-                "Max" : 90
-            },
-            "BudgetRange" : {
-                "Min" : 500, 
-                "Max" : 1000
-            },
-            "AI" : false,
-            "RequiredSubsystems" : [
-                "Shields",
-                "Cloaking"
-            ],
-            "ShieldLevel" : 1
-        },
-    ]
+    "ShipRequestParameters" : {
+        "Budget" : [10000, 10000000],
+        "MinSpeed" : 1,
+        "MaxSpeed" : 2,
+        "Subsystems" : [
+            "Life Support", 
+            "Shields",
+            "AI",
+            "Reactor",
+            "Navigation",
+            "FTL Drive"
+        ]
+    }
 }

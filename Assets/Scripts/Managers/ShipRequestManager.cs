@@ -1,48 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class ShipRequestManager : MonoBehaviour
 {
-    public ShipRequest currentShipRequest;
+    public RequestData currentShipRequest;
 
-    delegate void TestFunc(ShipRequest Request);
-    TestFunc createNewShipRequest;
+    delegate void CreateNewRequest(RequestData Request);
+    CreateNewRequest createNewShipRequest;
 
-    [SerializeField]
-    private int numSubsystemTypes = 4;
+    public TMP_Text requestText;
 
-    public GameObject requestUI;
+    //public TextAsset requestData;
 
-    private TMP_Text requestText;
-
-    private GameObject textPrefab;
-
-    private void Awake()
+    private void OnEnable()
     {
-        ShipType shipType = Utilities.GetRandomEnumValue<ShipType>();
-        float maxMoney = Random.Range(7500f, 10000f);
-        int minSpeed = Random.Range(5, 10);
-        
-        print("SHIP TYPE: " + shipType.ToString() + " | MAX MONEY: " + maxMoney.ToString() + " | MIN SPEED: " + minSpeed.ToString());
-        
-        // List<ShipSubsystemType> list = new List<ShipSubsystemType>();
+        EventManager.onSubmit += OnSubmission;
+    }
 
-        // // Add a few random required subsystems
-        // for (int i = 0; i < numSubsystemTypes; i++)
-        // {
-        //     list.Add((ShipSubsystemType)Random.Range(0, (int)System.Enum.GetValues(typeof(ShipSubsystemType)).Cast<ShipSubsystemType>().Max()));
-        // }
-
-        // currentShipRequest = new ShipRequest(list, Random.Range(10.0f, 30.0f));
+    private void OnDisable()
+    {
+        EventManager.onSubmit -= OnSubmission;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        EventManager.OnSubmission += CheckAgainstRequest;
+        SetNewRequest();
+        SetRequestText();
     }
 
     // Update is called once per frame
@@ -51,19 +37,29 @@ public class ShipRequestManager : MonoBehaviour
         
     }
 
-    public void SetCurrentRequest()
-    {
-        currentShipRequest = CreateRandomRequest(numSubsystemTypes);
-    }
-
     private void OnSubmission()
     {
+        print("Checking if ship is valid...");
         IsValidShip();
     }
 
+    /// <summary>
+    /// Checks if the current design is a valid ship design.
+    /// A valid ship design:
+    ///     - Does not have any exposed segments
+    ///     - Has an engine/thrusters
+    ///     - Has at least two modules
+    /// </summary>
+    /// <returns>Whether or not the design is valid</returns>
     private bool IsValidShip()
     {
         GameObject root = ShipManager.Instance.rootModule;
+
+        if (root == null)
+        {
+            return false;
+        }
+
         foreach (Connector connector in root.GetComponent<ShipModule>().connectors)
         {
             if (!connector.connectedObject)
@@ -75,94 +71,74 @@ public class ShipRequestManager : MonoBehaviour
         return true;
     }
 
-    // Check to see if the ship in the assembly area matches the requirements provided
+    /// <summary>
+    /// Check to see if the current design satisfies the customer's request
+    /// </summary>
     public void CheckAgainstRequest()
     {
-        //List<ShipSubsystemType> SatisfiedRequests = new List<ShipSubsystemType>();
-        //List<GameObject> ShipParts = assemblyAreaObject.GetComponent<AssemblyArea>().ObjectsInArea;
-
-        //if (ShipParts.Count > 0)
-        //{
-        //    foreach (var Object in ShipParts)
-        //    {
-        //        foreach (Transform t in Object.gameObject.transform)
-        //        {
-        //            if (t.gameObject.tag == "Room")
-        //            {
-        //                //Room room = t.gameObject.GetComponent<Room>();
-        //                //if (room.InstalledSubsystems != null)
-        //                //{
-        //                //    foreach (var subsystem in room.InstalledSubsystems)
-        //                //    {
-        //                //        if (subsystem.tag == "Reactor" && !SatisfiedRequests.Contains(ShipSubsystemType.REACTOR))
-        //                //        {
-        //                //            SatisfiedRequests.Add(ShipSubsystemType.REACTOR);
-        //                //        }
-        //                //        else if (subsystem.tag == "ShieldGen" && !SatisfiedRequests.Contains(ShipSubsystemType.SHIELDS))
-        //                //        {
-        //                //            SatisfiedRequests.Add(ShipSubsystemType.SHIELDS);
-        //                //        }
-        //                //        else if (subsystem.tag == "LifeSup" && !SatisfiedRequests.Contains(ShipSubsystemType.LIFE_SUPPORT))
-        //                //        {
-        //                //            SatisfiedRequests.Add(ShipSubsystemType.LIFE_SUPPORT);
-        //                //        }
-        //                //    }
-        //                //}
-        //            }
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    print("There's nothing here!");
-        //}
-
-        //if (SatisfiedRequests.All(currentShipRequest.RequiredSubsystems.Contains) && currentShipRequest.RequiredSubsystems.Count == SatisfiedRequests.Count)
-        //{
-        //    print("nice");
-        //    CleanUpObjects();
-        //    moneyCounter.GetComponent<MoneyCount>().IncrementBalance();
-        //    currentShipRequest = CreateRandomRequest(numSubsystemTypes);
-        //    requestUI.GetComponent<RequestText>().SetText();
-        //}
-        //else
-        //{
-        //    print("no");
-        //    moneyCounter.GetComponent<MoneyCount>().DecrementBalance();
-        //}
-    }
-
-    private ShipRequest CreateRandomRequest(int numTypes)
-    {
-        List<ShipSubsystemType> list = new List<ShipSubsystemType>();
-
-        // Add a few random required subsystems
-        for (int i = 0; i < numTypes; i++)
-        {
-            ShipSubsystemType subsystem = GetRandomSubsystem();
-            if (!list.Contains(subsystem))
-            {
-                list.Add(subsystem);
-            }
-        }
-
-        ShipRequest request = new ShipRequest(list, Random.Range(10.0f, 30.0f));
-
-        return request;
-    }
-
-    private ShipSubsystemType GetRandomSubsystem()
-    {
-        return (ShipSubsystemType)Random.Range(0, (int)System.Enum.GetValues(typeof(ShipSubsystemType)).Cast<ShipSubsystemType>().Max());
+        
     }
 
     public void SetRequestText()
     {
-        requestText.text = "";
-        foreach (ShipSubsystemType subsystem in currentShipRequest.RequiredSubsystems)
+        requestText.text = "Current Request:\n" +
+                           "Ship Type: " + currentShipRequest.shipType.ToString() + "\n" + 
+                           "Ship Class: " + currentShipRequest.shipClass.ToString() + "\n" +
+                           "Mininum Speed: " + currentShipRequest.minSpeed.ToString() + "\n" +
+                           "Maximum Speed: " + currentShipRequest.maxSpeed.ToString() + "\n\n";
+
+        requestText.text += "Required Subsystems:\n";
+
+        foreach (Subsystem subsystem in currentShipRequest.requiredSubsystems)
         {
-            requestText.text += (subsystem + "\n");
+            requestText.text += "\t" + subsystem.ToString() + "\n";
         }
+
+        requestText.text += "\nBudget: " + currentShipRequest.budget.ToString();
     }
 
+    /// <summary>
+    /// Creates a random request for a ship and sets it to the current ship request.
+    /// </summary>
+    public void SetNewRequest()
+    {
+        // TODO: get data from JSON file so that random distribution isn't equal
+        
+        RequestData data = new RequestData();
+        data.shipType = Utilities.GetRandomEnumValue<ShipType>();
+        data.shipClass = Utilities.GetRandomEnumValue<ShipClass>();
+
+        switch (data.shipClass)
+        {
+            case ShipClass.Corvette:
+                data.budget = Random.Range(10000, 50000);
+                data.minSpeed = 5;
+                data.maxSpeed = 10;
+                break;
+            case ShipClass.Destroyer:
+                data.budget = Random.Range(40000, 75000);
+                data.minSpeed = 4;
+                data.maxSpeed = 8;
+                break;
+            case ShipClass.Carrier:
+                data.budget = Random.Range(100000, 200000);
+                data.minSpeed = 1;
+                data.maxSpeed = 3;
+                break;
+            default:
+                data.budget = 0;
+                data.minSpeed = 0;
+                data.maxSpeed = 0;
+                break;
+        }
+
+        data.requiredSubsystems = new HashSet<Subsystem>();
+        
+        for (int i = 0; i < Random.Range(1, System.Enum.GetNames(typeof(Subsystem)).Length); i++)
+        {
+            data.requiredSubsystems.Add(Utilities.GetRandomEnumValue<Subsystem>());
+        }
+
+        currentShipRequest = data;
+    }
 }

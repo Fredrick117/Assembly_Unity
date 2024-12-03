@@ -7,6 +7,20 @@ public class DraggableManager : MonoBehaviour
     [HideInInspector]
     public Draggable currentlyDraggedObject = null;
 
+    public static DraggableManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,22 +31,5 @@ public class DraggableManager : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void PlaceDraggable(GameObject draggedObject)
-    {
-        if (ShipManager.Instance.rootModule == null)
-        {
-            print("I am the root");
-            ShipManager.Instance.rootModule = draggedObject;
-        }
-    }
-
-    public void BeginDraggingObject(Draggable draggedObject)
-    {
-        if (!currentlyDraggedObject)
-        {
-            currentlyDraggedObject = draggedObject;
-        }
     }
 }

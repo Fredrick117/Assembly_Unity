@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private DraggableManager draggableManager;
+
     [SerializeField]
     private ShipRequestManager shipRequestManager;
+
     [SerializeField]
     private ShipManager shipManager;
 
@@ -42,15 +44,15 @@ public class GameManager : MonoBehaviour
     {
         GameObject spawnedObject = GameObject.Instantiate(newObject, (Vector2)Input.mousePosition, Quaternion.identity);
 
-        if (spawnedObject != null)
+        if (spawnedObject == null)
         {
-            // TODO: what if object doesn't have Draggable component?
-            draggableManager.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
-            spawnedObject.GetComponent<Draggable>().isDragging = true;
+            Debug.LogError("SpawnedObject was null!");
+            return;
         }
-        else
-        {
-            print("SpawnedObject was null!");
-        }
+        
+        // TODO: what if object doesn't have Draggable component?
+        draggableManager.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
+        DraggableManager.Instance.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
+        spawnedObject.GetComponent<Draggable>().BeginDragging();
     }
 }

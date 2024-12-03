@@ -6,8 +6,8 @@ public class EventManager : MonoBehaviour
 {
     public static EventManager Instance { get; private set; }
 
-    public delegate void SubmissionAction();
-    public static event SubmissionAction OnSubmission;
+    public delegate void SubmitDesign();
+    public static SubmitDesign onSubmit;
 
     private void Awake()
     {
@@ -23,7 +23,7 @@ public class EventManager : MonoBehaviour
 
     public void OnSubmitClicked()
     {
-        if (OnSubmission != null)
-            OnSubmission();
+        print("On submit clicked");
+        onSubmit?.Invoke();
     }
 }
