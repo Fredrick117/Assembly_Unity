@@ -14,9 +14,4 @@ public class Utilities
     {
         return child.transform.IsChildOf(parent.transform);
     }
-
-    public static string IntToFormattedString(int value)
-    {
-        return value.ToString("N0");
-    }
 }
