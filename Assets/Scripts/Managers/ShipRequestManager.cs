@@ -10,7 +10,9 @@ public class ShipRequestManager : MonoBehaviour
     delegate void CreateNewRequest(RequestData Request);
     CreateNewRequest createNewShipRequest;
 
-    public TMP_Text requestText;
+    public GameObject textPrefab;
+
+    public Transform requestPanel;
 
     //public TextAsset requestData;
 
@@ -28,7 +30,6 @@ public class ShipRequestManager : MonoBehaviour
     void Start()
     {
         SetNewRequest();
-        SetRequestText();
     }
 
     // Update is called once per frame
@@ -39,6 +40,7 @@ public class ShipRequestManager : MonoBehaviour
 
     private void OnSubmission()
     {
+<<<<<<< HEAD
         print("Checking if ship is valid...");
         print("Ship is valid: " + IsValidShip());
     }
@@ -69,6 +71,10 @@ public class ShipRequestManager : MonoBehaviour
         }
 
         return true;
+=======
+        CheckAgainstRequest();
+        SetNewRequest();
+>>>>>>> b61a62f7226ad64a4d4ea21ed388cdc522f35fb8
     }
 
     /// <summary>
@@ -76,25 +82,7 @@ public class ShipRequestManager : MonoBehaviour
     /// </summary>
     public void CheckAgainstRequest()
     {
-        
-    }
-
-    public void SetRequestText()
-    {
-        requestText.text = "Current Request:\n" +
-                           "Ship Type: " + currentShipRequest.shipType.ToString() + "\n" + 
-                           "Ship Class: " + currentShipRequest.shipClass.ToString() + "\n" +
-                           "Mininum Speed: " + currentShipRequest.minSpeed.ToString() + "\n" +
-                           "Maximum Speed: " + currentShipRequest.maxSpeed.ToString() + "\n\n";
-
-        requestText.text += "Required Subsystems:\n";
-
-        foreach (Subsystem subsystem in currentShipRequest.requiredSubsystems)
-        {
-            requestText.text += "\t" + subsystem.ToString() + "\n";
-        }
-
-        requestText.text += "\nBudget: " + currentShipRequest.budget.ToString();
+        Debug.LogError("Checking against request not yet implemented!");
     }
 
     /// <summary>
@@ -111,17 +99,17 @@ public class ShipRequestManager : MonoBehaviour
         switch (data.shipClass)
         {
             case ShipClass.Corvette:
-                data.budget = Random.Range(10000, 50000);
+                data.budget = Random.Range(1, 6) * 10000;
                 data.minSpeed = 5;
                 data.maxSpeed = 10;
                 break;
             case ShipClass.Destroyer:
-                data.budget = Random.Range(40000, 75000);
+                data.budget = (int)Random.Range(4.0f, 8.5f) * 10000;
                 data.minSpeed = 4;
                 data.maxSpeed = 8;
                 break;
             case ShipClass.Carrier:
-                data.budget = Random.Range(100000, 200000);
+                data.budget = Random.Range(10, 20) * 10000;
                 data.minSpeed = 1;
                 data.maxSpeed = 3;
                 break;
@@ -140,5 +128,34 @@ public class ShipRequestManager : MonoBehaviour
         }
 
         currentShipRequest = data;
+
+        SetRequestText();
+    }
+
+    /// <summary>
+    /// Populates the request UI panel with text based on the current request
+    /// </summary>
+    private void SetRequestText()
+    {
+        GameObject shipTypeText = GameObject.Instantiate(textPrefab, requestPanel);
+        shipTypeText.GetComponent<TMP_Text>().text = "Ship Type: " + currentShipRequest.shipType.ToString();
+
+        GameObject shipClassText = GameObject.Instantiate(textPrefab, requestPanel);
+        shipClassText.GetComponent<TMP_Text>().text = "Ship Class: " + currentShipRequest.shipClass.ToString();
+
+        GameObject minSpeedText = GameObject.Instantiate(textPrefab, requestPanel);
+        minSpeedText.GetComponent<TMP_Text>().text = "Minimum Speed: " + currentShipRequest.minSpeed.ToString();
+
+        GameObject maxSpeedText = GameObject.Instantiate(textPrefab, requestPanel);
+        maxSpeedText.GetComponent<TMP_Text>().text = "Maximum Speed: " + currentShipRequest.maxSpeed.ToString();
+
+        foreach (Subsystem subsystem in currentShipRequest.requiredSubsystems)
+        {
+            GameObject subsystemText = GameObject.Instantiate(textPrefab, requestPanel);
+            subsystemText.GetComponent<TMP_Text>().text = "\t" + subsystem.ToString();
+        }
+
+        GameObject budgetText = GameObject.Instantiate(textPrefab, requestPanel);
+        budgetText.GetComponent<TMP_Text>().text = "Budget: " + Utilities.IntToFormattedString(currentShipRequest.budget);
     }
 }
