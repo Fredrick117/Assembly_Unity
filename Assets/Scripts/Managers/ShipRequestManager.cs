@@ -40,7 +40,7 @@ public class ShipRequestManager : MonoBehaviour
     private void OnSubmission()
     {
         print("Checking if ship is valid...");
-        IsValidShip();
+        print("Ship is valid: " + IsValidShip());
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class ShipRequestManager : MonoBehaviour
 
         foreach (Connector connector in root.GetComponent<ShipModule>().connectors)
         {
-            if (!connector.connectedObject)
+            if (!connector.otherConnector)
             {
                 return false;
             }

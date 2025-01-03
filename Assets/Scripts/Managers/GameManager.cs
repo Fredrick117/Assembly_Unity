@@ -53,6 +53,6 @@ public class GameManager : MonoBehaviour
         // TODO: what if object doesn't have Draggable component?
         draggableManager.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
         DraggableManager.Instance.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
-        spawnedObject.GetComponent<Draggable>().BeginDragging();
+        spawnedObject.GetComponent<Draggable>().isDragging = true;
     }
 }

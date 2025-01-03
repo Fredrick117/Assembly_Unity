@@ -14,21 +14,7 @@ public class ShipModule : MonoBehaviour
     public ModuleType moduleType;
 
     [HideInInspector]
-    public bool isConnectedToRoot = false;
-
-    [HideInInspector]
-    public bool isCollidingWithShipModule = false;
-
-    [HideInInspector]
-    public List<ShipModule> connectedModules = new List<ShipModule>();
-
-    [HideInInspector]
     public Connector[] connectors;
-
-    private void Awake()
-    {
-        
-    }
 
     // Start is called before the first frame update
     void Start()

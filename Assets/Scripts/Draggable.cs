@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour
 {
-    private bool isDragging = false;
+    public bool isDragging = false;
 
     private Vector3 offset;
 
@@ -13,12 +14,10 @@ public class Draggable : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    public float snapDistance = 0.025f;
+    private Color originalColor;
 
-    [SerializeField]
     private Color validPlacementColor = Color.green;
 
-    [SerializeField]
     private Color invalidPlacementColor = Color.red;
 
     [SerializeField]
@@ -30,7 +29,7 @@ public class Draggable : MonoBehaviour
 
     private void Awake()
     {
-
+        originalColor = hullSprite.color;
     }
 
     private void Start()
@@ -78,7 +77,7 @@ public class Draggable : MonoBehaviour
         else
         {
             print("begin dragging");
-            BeginDragging();
+            PickUpObject();
         }
     }
 
@@ -111,10 +110,10 @@ public class Draggable : MonoBehaviour
                     continue;
                 }
 
-                // TODO: what if there's more than one connector?
                 if (connector.type == nearbyConnector.type)
                 {
                     canPlace = true;
+
                     return;
                 }
             }
@@ -123,17 +122,21 @@ public class Draggable : MonoBehaviour
         canPlace = false;
     }
 
-    public void BeginDragging()
+    public void PickUpObject()
     {
-        print("begin dragging");
+        print("pick up object");
         offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         isDragging = true;
+
+        RemoveAllConnections();
 
         initialPickupPosition = transform.position;
     }
 
     public void PlaceObject()
     {
+        print("place object");
+
         isDragging = false;
 
         if (!canPlace)
@@ -153,17 +156,42 @@ public class Draggable : MonoBehaviour
             ShipManager.Instance.rootModule = gameObject;
         }
 
-        // TODO: move this to ShipModule class!
-        hullSprite.color = Color.white;
+        PopulateConnections();
+
+        // TODO: fix
+        hullSprite.color = originalColor;
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.green;
+    private void RemoveAllConnections()
+    {
+        foreach (Connector connector in shipModule.connectors)
+        {
+            connector.otherConnector.otherConnector = null;
+            connector.otherConnector = null;
+        }
+    }
 
-    //    foreach (Connector connector in shipModule.connectors)
-    //    {
-    //        Gizmos.DrawSphere(connector.transform.position, 0.1f);
-    //    }
-    //}
+    private void PopulateConnections()
+    {
+        foreach (Connector connector in shipModule.connectors)
+        {
+            Collider2D[] nearbyConnectors = Physics2D.OverlapCircleAll(connector.transform.position, 0.1f, LayerMask.GetMask("Connector"));
+
+            foreach (Collider2D hit in nearbyConnectors)
+            {
+                Connector nearbyConnector = hit.GetComponent<Connector>();
+
+                if (nearbyConnector == null || nearbyConnector == connector || nearbyConnector.transform.IsChildOf(transform))
+                {
+                    continue;
+                }
+
+                if (connector.type == nearbyConnector.type)
+                {
+                    connector.otherConnector = nearbyConnector;
+                    nearbyConnector.otherConnector = connector;
+                }
+            }
+        }
+    }
 }

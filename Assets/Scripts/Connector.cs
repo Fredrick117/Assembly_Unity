@@ -7,18 +7,17 @@ using UnityEngine;
 [Serializable]
 public enum ConnectorType
 {
-    Type1,
-    Type2,
-    Type3,
+    Module,
+    Engine,
+    Weapon,
 };
 
 public class Connector : MonoBehaviour
 {
-    private bool isOccupied = false;
-
     public ConnectorType type;
 
-    public GameObject connectedObject = null;
+    //public GameObject connectedObject = null;
+    public Connector otherConnector = null;
 
     public Color connectorColor = Color.black;
 
@@ -30,31 +29,20 @@ public class Connector : MonoBehaviour
 
         switch (type)
         {
-            case ConnectorType.Type1:
+            case ConnectorType.Module:
                 spriteRenderer.color = Color.red;
                 break;
 
-            case ConnectorType.Type2:
+            case ConnectorType.Engine:
                 spriteRenderer.color = Color.green;
                 break;
 
-            case ConnectorType.Type3:
+            case ConnectorType.Weapon:
                 spriteRenderer.color = Color.blue;
                 break;
 
             default:
                 break;
         }
-    }
-
-    public void Connect(bool isOccupied)
-    {
-        if (this.isOccupied != isOccupied)
-            this.isOccupied = isOccupied;
-    }
-
-    public void SetConnectedObject(GameObject newObject)
-    {
-        connectedObject = newObject;
     }
 }
