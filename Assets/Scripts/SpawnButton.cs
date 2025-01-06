@@ -11,7 +11,7 @@ public class SpawnButton : MonoBehaviour, IPointerDownHandler
 
     private TMP_Text buttonText;
 
-    private void Awake()
+    private void Start()
     {
         buttonText = GetComponentInChildren<TMP_Text>();
 
@@ -28,5 +28,10 @@ public class SpawnButton : MonoBehaviour, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         GameManager.Instance.SpawnObjectFromButton(objectToSpawn);
+    }
+
+    public void SetObjectToSpawn(GameObject obj)
+    {
+        objectToSpawn = obj;
     }
 }

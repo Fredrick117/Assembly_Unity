@@ -81,7 +81,7 @@ public class ShipRequestManager : MonoBehaviour
 
     public void SetRequestText()
     {
-        requestText.text = "Current Request:\n" +
+        requestText.text = "Current Request:\n\n" +
                            "Ship Type: " + currentShipRequest.shipType.ToString() + "\n" + 
                            "Ship Class: " + currentShipRequest.shipClass.ToString() + "\n" +
                            "Mininum Speed: " + currentShipRequest.minSpeed.ToString() + "\n" +
