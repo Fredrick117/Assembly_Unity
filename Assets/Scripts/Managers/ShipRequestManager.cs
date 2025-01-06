@@ -81,20 +81,19 @@ public class ShipRequestManager : MonoBehaviour
 
     public void SetRequestText()
     {
-        requestText.text = "Current Request:\n\n" +
-                           "Ship Type: " + currentShipRequest.shipType.ToString() + "\n" + 
-                           "Ship Class: " + currentShipRequest.shipClass.ToString() + "\n" +
-                           "Mininum Speed: " + currentShipRequest.minSpeed.ToString() + "\n" +
-                           "Maximum Speed: " + currentShipRequest.maxSpeed.ToString() + "\n\n";
+        requestText.text = "<b>Ship Type:</b> " + currentShipRequest.shipType.ToString() + "\n" + 
+                           "<b>Ship Class:</b> " + currentShipRequest.shipClass.ToString() + "\n" +
+                           "<b>Mininum Speed:</b> " + currentShipRequest.minSpeed.ToString() + "\n" +
+                           "<b>Maximum Speed:</b> " + currentShipRequest.maxSpeed.ToString() + "\n\n";
 
-        requestText.text += "Required Subsystems:\n";
+        requestText.text += "<b>Required Subsystems:</b>\n";
 
         foreach (Subsystem subsystem in currentShipRequest.requiredSubsystems)
         {
             requestText.text += "\t" + subsystem.ToString() + "\n";
         }
 
-        requestText.text += "\nBudget: " + currentShipRequest.budget.ToString();
+        requestText.text += "\n<b>Budget:</b> " + currentShipRequest.budget.ToString();
     }
 
     /// <summary>
