@@ -32,10 +32,12 @@ public enum ShipClass
 [System.Serializable]
 public struct RequestData
 {
-    public int budget;
-    public float minSpeed;
-    public float maxSpeed;
-    public ShipType shipType;
-    public ShipClass shipClass;
+    public int? budget;
+    public float? minSpeed;
+    public float? maxSpeed;
+    public ShipType? shipType;
+    public ShipClass? shipClass;
     public HashSet<Subsystem> requiredSubsystems;
+
+    public int reward;
 }

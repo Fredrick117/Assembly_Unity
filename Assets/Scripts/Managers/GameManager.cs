@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -16,7 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ShipManager shipManager;
 
-    public GameObject moneyCounter;
+    public int credits = 5000;
+    public TMP_Text creditsText;
 
     // TODO: implement
     public bool holdToDrag = false;
@@ -54,5 +56,12 @@ public class GameManager : MonoBehaviour
         draggableManager.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
         DraggableManager.Instance.currentlyDraggedObject = spawnedObject.GetComponent<Draggable>();
         spawnedObject.GetComponent<Draggable>().isDragging = true;
+    }
+
+    public void UpdateCredits(int amount)
+    {
+        credits += amount;
+
+        creditsText.text = credits.ToString();
     }
 }

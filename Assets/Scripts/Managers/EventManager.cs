@@ -23,7 +23,6 @@ public class EventManager : MonoBehaviour
 
     public void OnSubmitClicked()
     {
-        print("On submit clicked");
         onSubmit?.Invoke();
     }
 }

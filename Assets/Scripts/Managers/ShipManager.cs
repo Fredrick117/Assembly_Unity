@@ -1,11 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ShipManager : MonoBehaviour
 {
     [HideInInspector]
     public GameObject rootModule = null;
+
+    private List<GameObject> shipModules = new List<GameObject>();
+
+    public int currentDesignCost = 0;
+    public ShipClass? currentDesignClass;
+    public ShipType? currentDesignType;
+    public float currentDesignMinSpeed;
+    public float currentDesignMaxSpeed;
+    public HashSet<Subsystem> currentDesignSubsystems = new HashSet<Subsystem>();
 
     public static ShipManager Instance { get; private set; }
 
@@ -21,20 +31,13 @@ public class ShipManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void ClearAllShipModules()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void OnNewModuleSpawned(GameObject modulePrefab)
-    {
-        
+        shipModules.Clear();
+        rootModule = null;
+        currentDesignCost = 0;
+        currentDesignClass = null;
+        currentDesignType = null;
+        currentDesignSubsystems.Clear();
     }
 }
