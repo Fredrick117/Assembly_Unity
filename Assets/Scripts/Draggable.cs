@@ -160,6 +160,8 @@ public class Draggable : MonoBehaviour
 
         // TODO: fix
         hullSprite.color = originalColor;
+
+        DraggableManager.Instance.DraggablePlaced();
     }
 
     private void RemoveAllConnections()

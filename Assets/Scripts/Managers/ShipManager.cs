@@ -31,6 +31,16 @@ public class ShipManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        DraggableManager.onPlace += UpdateShipStats;
+    }
+
+    private void OnDisable()
+    {
+        DraggableManager.onPlace -= UpdateShipStats;
+    }
+
     public void ClearAllShipModules()
     {
         shipModules.Clear();
@@ -39,5 +49,18 @@ public class ShipManager : MonoBehaviour
         currentDesignClass = null;
         currentDesignType = null;
         currentDesignSubsystems.Clear();
+
+        GameObject[] modules = GameObject.FindGameObjectsWithTag("ShipModule");
+        foreach (GameObject module in modules)
+        {
+            GameObject.Destroy(module);
+        }
+    }
+
+    private void UpdateShipStats()
+    {
+        // Get all ship parts
+
+        // 
     }
 }

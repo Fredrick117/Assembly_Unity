@@ -9,6 +9,9 @@ public class DraggableManager : MonoBehaviour
 
     public static DraggableManager Instance { get; private set; }
 
+    public delegate void PlaceModule();
+    public static PlaceModule onPlace;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,15 +24,8 @@ public class DraggableManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void DraggablePlaced()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        onPlace?.Invoke();
     }
 }

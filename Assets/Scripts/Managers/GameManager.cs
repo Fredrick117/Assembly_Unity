@@ -17,11 +17,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ShipManager shipManager;
 
+    [HideInInspector]
     public int credits = 5000;
     public TMP_Text creditsText;
 
     // TODO: implement
     public bool holdToDrag = false;
+
+    private int strikes = 0;
 
     private void Awake()
     {
@@ -33,6 +36,8 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        creditsText.text = credits.ToString();
     }
     void Update()
     {

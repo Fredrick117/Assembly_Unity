@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -29,7 +30,6 @@ public class ShipRequestManager : MonoBehaviour
     void Start()
     {
         SetNewRequest();
-        SetRequestText();
     }
 
     private void OnSubmission()
@@ -37,12 +37,13 @@ public class ShipRequestManager : MonoBehaviour
         print("Checking if ship is valid...");
         print("Ship is valid: " + IsValidShip());
 
-        GameObject[] modules = GameObject.FindGameObjectsWithTag("ShipModule");
-        SubmitDesign();
+        //GameObject[] modules = GameObject.FindGameObjectsWithTag("ShipModule");
 
         ShipManager.Instance.ClearAllShipModules();
 
         SubmitDesign();
+
+        SetNewRequest();
     }
 
     /// <summary>
@@ -73,9 +74,10 @@ public class ShipRequestManager : MonoBehaviour
         return true;
     }
 
-    public void SubmitDesign()
+    private int GetRewardAmount()
     {
         float rewardModifier = 1.0f;
+
         if (activeShipRequest.budget != null)
         {
             if (ShipManager.Instance.currentDesignCost < activeShipRequest.budget)
@@ -88,20 +90,24 @@ public class ShipRequestManager : MonoBehaviour
             }
         }
 
-
-        if (rewardModifier <= 0.0f)
+        if (rewardModifier <= 0.0f || GameObject.FindGameObjectsWithTag("ShipModule").Count() == 0)
         {
-            rewardModifier = 0.0f;
+            return -1000;
         }
 
-        GameManager.Instance.UpdateCredits(Mathf.RoundToInt(activeShipRequest.reward * rewardModifier));
+        return Mathf.RoundToInt(activeShipRequest.reward * rewardModifier);
     }
 
-    public void SetRequestText()
+    public void SubmitDesign()
+    {
+        GameManager.Instance.UpdateCredits(GetRewardAmount());
+    }
+
+    private void SetRequestText()
     {
         requestText.text = "<b>Ship Type:</b> " + activeShipRequest.shipType.ToString() + "\n" + 
                            "<b>Ship Class:</b> " + activeShipRequest.shipClass.ToString() + "\n" +
-                           "<b>Mininum Speed:</b> " + activeShipRequest.minSpeed.ToString() + "\n" +
+                           "<b>Minimum Speed:</b> " + activeShipRequest.minSpeed.ToString() + "\n" +
                            "<b>Maximum Speed:</b> " + activeShipRequest.maxSpeed.ToString() + "\n\n";
 
         requestText.text += "<b>Required Subsystems:</b>\n";
@@ -125,25 +131,27 @@ public class ShipRequestManager : MonoBehaviour
         data.shipType = Utilities.GetRandomEnumValue<ShipType>();
         data.shipClass = Utilities.GetRandomEnumValue<ShipClass>();
 
+        int budget = 0;
+
         switch (data.shipClass)
         {
             case ShipClass.Corvette:
-                data.budget = Random.Range(10000, 50000);
+                budget = 20000;
                 data.minSpeed = 5;
                 data.maxSpeed = 10;
                 break;
             case ShipClass.Destroyer:
-                data.budget = Random.Range(40000, 75000);
+                budget = 40000;
                 data.minSpeed = 4;
                 data.maxSpeed = 8;
                 break;
             case ShipClass.Carrier:
-                data.budget = Random.Range(100000, 200000);
+               budget = 100000;
                 data.minSpeed = 1;
                 data.maxSpeed = 3;
                 break;
             default:
-                data.budget = 0;
+                budget = 0;
                 data.minSpeed = 0;
                 data.maxSpeed = 0;
                 break;
@@ -153,9 +161,13 @@ public class ShipRequestManager : MonoBehaviour
         
         for (int i = 0; i < Random.Range(1, System.Enum.GetNames(typeof(Subsystem)).Length); i++)
         {
+            budget += 5000;
             data.requiredSubsystems.Add(Utilities.GetRandomEnumValue<Subsystem>());
         }
 
+        data.budget = budget;
         activeShipRequest = data;
+
+        SetRequestText();
     }
 }

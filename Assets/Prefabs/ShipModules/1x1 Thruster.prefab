@@ -143,8 +143,8 @@ GameObject:
   - component: {fileID: 2538722763688364521}
   - component: {fileID: 3935548719418796935}
   m_Layer: 0
-  m_Name: Thruster
-  m_TagString: Untagged
+  m_Name: 1x1 Thruster
+  m_TagString: ShipModule
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,6 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f306be0732421a64ab9b65fdb7c1ec91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDragging: 0
   hullSprite: {fileID: 1309611921171752628}
 --- !u!50 &2538722763688364521
 Rigidbody2D:
@@ -219,9 +220,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moduleType: 2
-  isConnectedToRoot: 0
-  isCollidingWithShipModule: 0
-  connectedModules: []
   connectors: []
 --- !u!1001 &5250646907665771751
 PrefabInstance:
