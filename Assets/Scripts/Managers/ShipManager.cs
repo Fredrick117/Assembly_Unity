@@ -10,12 +10,20 @@ public class ShipManager : MonoBehaviour
 
     private List<GameObject> shipModules = new List<GameObject>();
 
-    public int currentDesignCost = 0;
-    public ShipClass? currentDesignClass;
-    public ShipType? currentDesignType;
-    public float currentDesignMinSpeed;
-    public float currentDesignMaxSpeed;
-    public HashSet<Subsystem> currentDesignSubsystems = new HashSet<Subsystem>();
+    public int currentShipCost = 0;
+    public ShipClass? currentShipClass;
+    public ShipType? currentShipType;
+    public float currentShipMinSpeed;
+    public float currentShipMaxSpeed;
+    public HashSet<Subsystem> currentShipSubsystems = new HashSet<Subsystem>();
+
+    public GameObject currentShip = null;
+
+    [SerializeField]
+    private TMP_Text shipTypeText;
+
+    [SerializeField]
+    private TMP_Text shipClassText;
 
     public static ShipManager Instance { get; private set; }
 
@@ -33,22 +41,22 @@ public class ShipManager : MonoBehaviour
 
     private void OnEnable()
     {
-        DraggableManager.onPlace += UpdateShipStats;
+        //DraggableManager.onPlace += UpdateShipStats;
     }
 
     private void OnDisable()
     {
-        DraggableManager.onPlace -= UpdateShipStats;
+        //DraggableManager.onPlace -= UpdateShipStats;
     }
 
     public void ClearAllShipModules()
     {
         shipModules.Clear();
         rootModule = null;
-        currentDesignCost = 0;
-        currentDesignClass = null;
-        currentDesignType = null;
-        currentDesignSubsystems.Clear();
+        currentShipCost = 0;
+        currentShipClass = null;
+        currentShipType = null;
+        currentShipSubsystems.Clear();
 
         GameObject[] modules = GameObject.FindGameObjectsWithTag("ShipModule");
         foreach (GameObject module in modules)
@@ -57,10 +65,14 @@ public class ShipManager : MonoBehaviour
         }
     }
 
-    private void UpdateShipStats()
+    public void SetShip(GameObject ship)
     {
-        // Get all ship parts
+        shipTypeText.text = ship.GetComponent<ShipBase>().type.ToString();
+        shipClassText.text = ship.GetComponent<ShipBase>().shipClass.ToString();
 
-        // 
+        if (currentShip != null)
+            GameObject.Destroy(currentShip);
+
+        currentShip = ship;
     }
 }

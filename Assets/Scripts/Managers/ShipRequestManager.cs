@@ -80,7 +80,7 @@ public class ShipRequestManager : MonoBehaviour
 
         if (activeShipRequest.budget != null)
         {
-            if (ShipManager.Instance.currentDesignCost < activeShipRequest.budget)
+            if (ShipManager.Instance.currentShipCost < activeShipRequest.budget)
             {
                 rewardModifier += 0.2f;
             }
@@ -145,7 +145,7 @@ public class ShipRequestManager : MonoBehaviour
                 data.minSpeed = 4;
                 data.maxSpeed = 8;
                 break;
-            case ShipClass.Carrier:
+            case ShipClass.Cruiser:
                budget = 100000;
                 data.minSpeed = 1;
                 data.maxSpeed = 3;

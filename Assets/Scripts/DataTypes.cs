@@ -16,9 +16,8 @@ public enum Subsystem
 [System.Serializable]
 public enum ShipType
 {
-    Warship,
-    Exploration,
-    Cargo,
+    Military,
+    Civilian
 }
 
 [System.Serializable]
@@ -26,7 +25,10 @@ public enum ShipClass
 { 
     Corvette,
     Destroyer,
-    Carrier
+    Cruiser,
+    Science,
+    Construction,
+    Cargo
 }
 
 [System.Serializable]
