@@ -6,9 +6,12 @@ public class ShipClassSelector : MonoBehaviour
 {
     public void OnSelectShipClass(GameObject shipToSpawn)
     {
-        GameObject.Instantiate(shipToSpawn, Vector3.zero, Quaternion.identity);
+        if (ShipManager.Instance.currentShip != null)
+            GameObject.Destroy(ShipManager.Instance.currentShip);
 
-        ShipManager.Instance.SetShip(shipToSpawn);
+        GameObject spawnedShip = GameObject.Instantiate(shipToSpawn, Vector3.zero, Quaternion.identity);
+
+        ShipManager.Instance.SetShip(spawnedShip);
 
         gameObject.SetActive(false);
     }

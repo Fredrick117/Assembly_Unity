@@ -67,11 +67,10 @@ public class ShipManager : MonoBehaviour
 
     public void SetShip(GameObject ship)
     {
-        shipTypeText.text = ship.GetComponent<ShipBase>().type.ToString();
-        shipClassText.text = ship.GetComponent<ShipBase>().shipClass.ToString();
+        ShipBase shipBase = ship.GetComponent<ShipBase>().GetComponent<ShipBase>();
 
-        if (currentShip != null)
-            GameObject.Destroy(currentShip);
+        shipTypeText.text = shipBase.type.ToString();
+        shipClassText.text = shipBase.shipClass.ToString();
 
         currentShip = ship;
     }

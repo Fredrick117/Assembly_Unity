@@ -43,3 +43,11 @@ public struct RequestData
 
     public int reward;
 }
+
+[System.Serializable]
+public class Starship
+{ 
+    public ShipType type;
+    public ShipClass classification;
+    public List<Subsystem> subsystems;
+}
